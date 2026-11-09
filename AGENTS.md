@@ -57,17 +57,17 @@ All changes to this repository are made by AI agents following these instruction
 - **Framework vs. project content**: [`FRAMEWORK.md`](FRAMEWORK.md) declares which files belong to the framework and which to the project, with modification and upgrade rules per category — consult it before modifying anything beyond project content.
 - **Free-prompting** (agent work outside a skill) carries risk: an agent acting in a context a skill covers, without following that skill's procedures (see Cross-Skill Artifact Procedures below), can introduce inconsistencies. Prefer invoking the skill; otherwise follow its procedures.
 - **AI tools unaware of these instructions** (e.g., a dependency-update bot) can introduce inconsistencies, even severe ones — one non-exhaustive example: violating a recorded constraint about the very dependency versions to use. Avoid them, or route their output through an agent that checks it against constraints and decisions before it lands.
-- **Recurring procedures deserve skills**: when the project's development calls for a procedure that will be repeated and is not covered by the existing skills, codify it as a new dedicated skill that integrates organically with the existing ones — considering the existing rules and indications (the Current State Protocol, the phase gates, the cross-skill procedures, the shared procedures in `.claude/skills/shared/`). Name project-created skills **without** the `SDLC-` prefix — it is reserved for framework skills (see `FRAMEWORK.md`).
+- **Recurring procedures deserve skills**: when the project's development calls for a procedure that will be repeated and is not covered by the existing skills, codify it as a new dedicated skill that integrates organically with the existing ones — considering the existing rules and indications (the Current State Protocol, the phase gates, the cross-skill procedures, the shared procedures in `.agents/skills/shared/`). Name project-created skills **without** the `SDLC-` prefix — it is reserved for framework skills (see `FRAMEWORK.md`).
 - **Manual editing must never happen**: direct edits that bypass these instructions (e.g., a human editing files by hand) too easily introduce inconsistencies or break the rules, and they defeat the tracking system (decision histories, implementation logs, Current State). If a manual edit happens anyway, run `/SDLC-validate`: it helps by detecting many structural inconsistencies and suggesting where corrections belong, but it cannot catch every possible kind of damage — review the edit's effects yourself.
 
 ---
 
 ## Phase-Specific Instructions
 
-Each phase directory contains a `CLAUDE.<phase>.md` file. When working in a phase:
+Each phase directory contains a `AGENTS.<phase>.md` file. When working in a phase:
 
 1. Read the phase-specific instructions — they extend (not override) this file
-2. Consult the decisions index in that phase file before starting work (for the Code phase, decisions indexes are in each component's own `CLAUDE.md` file — `3-code/<component-name>/CLAUDE.md` — not in `CLAUDE.code.md`)
+2. Consult the decisions index in that phase file before starting work (for the Code phase, decisions indexes are in each component's own `AGENTS.md` file — `3-code/<component-name>/AGENTS.md` — not in `AGENTS.code.md`)
 3. Work within the appropriate phase structure
 
 | Phase | Directory | Focus |
@@ -81,11 +81,11 @@ Each phase directory contains a `CLAUDE.<phase>.md` file. When working in a phas
 
 Any modification to phase artifacts — whether performed inside a skill, during a free-prompt conversation, or as a side effect of any other task — must follow the authoritative procedures for that phase:
 
-- **Specification artifacts** (`1-spec/`): follow the procedures in [`.claude/skills/SDLC-elicit/SKILL.md`](.claude/skills/SDLC-elicit/SKILL.md) — including traceability rules, status downgrade on modification, index synchronization, bidirectional link maintenance, and Current State tracking.
-- **Design artifacts** (`2-design/`): follow the procedures in [`.claude/skills/SDLC-design/SKILL.md`](.claude/skills/SDLC-design/SKILL.md) — including downstream effect checks, decision recording triggers, requirement coverage verification, and Current State tracking.
-- **Code phase task artifacts** (`3-code/tasks.md`): for creating or re-planning tasks, follow the procedures in [`.claude/skills/SDLC-implementation-plan/SKILL.md`](.claude/skills/SDLC-implementation-plan/SKILL.md) — including phased task grouping, traceability links, and incremental deployability. For task status transitions, follow [`.claude/skills/SDLC-execute-task/SKILL.md`](.claude/skills/SDLC-execute-task/SKILL.md) — including task list integrity, status propagation to Specification artifacts, and Current State tracking.
-- **Component source code** (`3-code/<component-name>/`): follow the procedures in [`.claude/skills/SDLC-fix/SKILL.md`](.claude/skills/SDLC-fix/SKILL.md) — or [`.claude/skills/SDLC-execute-task/SKILL.md`](.claude/skills/SDLC-execute-task/SKILL.md) when the change executes a planned task — including decisions application, tests and verification-index maintenance (the component's `verification.md` and the global `3-code/verification.md`, per the Testing Conventions in `3-code/CLAUDE.code.md`), design-gap handling, and implementation logging.
-- **Deploy artifacts** (`4-deploy/`): follow the AI Guidelines and index rules in [`4-deploy/CLAUDE.deploy.md`](4-deploy/CLAUDE.deploy.md), through the same skill procedures as component source code (`SDLC-execute-task` for planned tasks, `SDLC-fix` for ad-hoc changes).
+- **Specification artifacts** (`1-spec/`): follow the procedures in [`.agents/skills/SDLC-elicit/SKILL.md`](.agents/skills/SDLC-elicit/SKILL.md) — including traceability rules, status downgrade on modification, index synchronization, bidirectional link maintenance, and Current State tracking.
+- **Design artifacts** (`2-design/`): follow the procedures in [`.agents/skills/SDLC-design/SKILL.md`](.agents/skills/SDLC-design/SKILL.md) — including downstream effect checks, decision recording triggers, requirement coverage verification, and Current State tracking.
+- **Code phase task artifacts** (`3-code/tasks.md`): for creating or re-planning tasks, follow the procedures in [`.agents/skills/SDLC-implementation-plan/SKILL.md`](.agents/skills/SDLC-implementation-plan/SKILL.md) — including phased task grouping, traceability links, and incremental deployability. For task status transitions, follow [`.agents/skills/SDLC-execute-task/SKILL.md`](.agents/skills/SDLC-execute-task/SKILL.md) — including task list integrity, status propagation to Specification artifacts, and Current State tracking.
+- **Component source code** (`3-code/<component-name>/`): follow the procedures in [`.agents/skills/SDLC-fix/SKILL.md`](.agents/skills/SDLC-fix/SKILL.md) — or [`.agents/skills/SDLC-execute-task/SKILL.md`](.agents/skills/SDLC-execute-task/SKILL.md) when the change executes a planned task — including decisions application, tests and verification-index maintenance (the component's `verification.md` and the global `3-code/verification.md`, per the Testing Conventions in `3-code/AGENTS.code.md`), design-gap handling, and implementation logging.
+- **Deploy artifacts** (`4-deploy/`): follow the AI Guidelines and index rules in [`4-deploy/AGENTS.deploy.md`](4-deploy/AGENTS.deploy.md), through the same skill procedures as component source code (`SDLC-execute-task` for planned tasks, `SDLC-fix` for ad-hoc changes).
 
 ### Phase Gates
 
@@ -94,11 +94,11 @@ Before creating artifacts in the next phase, check these minimum preconditions. 
 | Transition | Precondition | How to verify |
 |------------|--------------|---------------|
 | Spec → Design | Stakeholders defined | At least one real (non-placeholder) row in `1-spec/stakeholders.md` |
-| Spec → Design | At least one requirement Approved | Requirements index in `1-spec/CLAUDE.spec.md` |
+| Spec → Design | At least one requirement Approved | Requirements index in `1-spec/AGENTS.spec.md` |
 | Spec → Design | Gap analysis fresh, no Critical gaps | `**Gap analysis**:` line in Current State: present in active form, `fresh`, no open Critical issues |
-| Design → Code | All design documents drafted | Every document in the Design Documents Index of `2-design/CLAUDE.design.md` has `**Status**:` `Draft` or `Approved` — not `Stub` |
+| Design → Code | All design documents drafted | Every document in the Design Documents Index of `2-design/AGENTS.design.md` has `**Status**:` `Draft` or `Approved` — not `Stub` |
 | Design → Code | Completeness assessment fresh, no Critical findings | `**Completeness assessment**:` line in Current State: present in active form, `fresh`, no open Critical findings |
-| Design → Code | Components identified | Per-component directories (each with a `CLAUDE.md`) in `3-code/` |
+| Design → Code | Components identified | Per-component directories (each with a `AGENTS.md`) in `3-code/` |
 
 **Crossing a gate always requires explicit user confirmation** — phase gate advancement is an "always ask" action (see Graduated Safeguards). When all preconditions are met, ask the user to confirm the advancement; when some are not, list them and proceed only if the user explicitly accepts the gaps. The crossing is recorded by updating `**Phase**:` in Current State: `/SDLC-design` sets `Design` when the first user-approved design change is applied; `/SDLC-decompose` sets `Code` when the component directories are created (which also satisfies the "components identified" precondition).
 
@@ -130,11 +130,11 @@ All project knowledge is captured as structured markdown files alongside the sou
 
 All artifact IDs use the pattern `PREFIX-kebab-name` — a type prefix followed by a descriptive kebab-case name. The descriptive name **is** the unique identifier (e.g., `DEC-use-postgres`, `REQ-F-search-by-name`). There are no numeric sequences, to avoid ID collisions when working on parallel branches.
 
-Acceptance criteria are sub-artifacts of requirements: each carries a stable `AC-kebab-name` ID unique within its requirement, and is addressed from outside as `REQ-CLASS-name/AC-name` (e.g., `REQ-F-search-by-name/AC-empty-query`) — this is how tests reference the criteria they verify (see Testing Conventions in `3-code/CLAUDE.code.md`).
+Acceptance criteria are sub-artifacts of requirements: each carries a stable `AC-kebab-name` ID unique within its requirement, and is addressed from outside as `REQ-CLASS-name/AC-name` (e.g., `REQ-F-search-by-name/AC-empty-query`) — this is how tests reference the criteria they verify (see Testing Conventions in `3-code/AGENTS.code.md`).
 
 ### Phase indexes
 
-Every `CLAUDE.<phase>.md` file contains index tables listing the artifacts in that phase. Each index must include a **File column** with a relative link to the artifact file, so that AI agents can discover the file name and reviewers can navigate easily.
+Every `AGENTS.<phase>.md` file contains index tables listing the artifacts in that phase. Each index must include a **File column** with a relative link to the artifact file, so that AI agents can discover the file name and reviewers can navigate easily.
 
 ---
 
@@ -159,11 +159,11 @@ Decisions live in `decisions/`. Each decision has two files:
 - **`DEC-kebab-name.md`** — the active record (context, decision, enforcement). Read during normal task execution.
 - **`DEC-kebab-name.history.md`** — the trail (alternatives, reasoning, changelog). Read only when evaluating or changing a decision.
 
-Each `CLAUDE.<phase>.md` contains a decisions index with trigger conditions. A decision may appear in multiple phase indexes.
+Each `AGENTS.<phase>.md` contains a decisions index with trigger conditions. A decision may appear in multiple phase indexes.
 
 ### How to use decisions during tasks
 
-1. Consult the decisions index in the current phase's `CLAUDE.<phase>.md`, or in the component's `CLAUDE.md` (`3-code/<component-name>/CLAUDE.md`) when working within a specific component.
+1. Consult the decisions index in the current phase's `AGENTS.<phase>.md`, or in the component's `AGENTS.md` (`3-code/<component-name>/AGENTS.md`) when working within a specific component.
 2. Follow the File column link to read the relevant `DEC-*.md` file.
 3. Apply its enforcement rules.
 
@@ -180,7 +180,7 @@ When a significant decision, pattern, or constraint emerges, record it as a new 
 Evaluate whether to:
 
 1. **Update this file** if project-wide patterns or architecture change significantly.
-2. **Update phase-specific files** (`CLAUDE.<phase>.md`) if phase-specific patterns or conventions are established.
+2. **Update phase-specific files** (`AGENTS.<phase>.md`) if phase-specific patterns or conventions are established.
 3. **Create new instruction files** if a workflow becomes complex enough to need dedicated guidance.
 
 Proactively suggest these updates when relevant.

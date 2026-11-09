@@ -21,9 +21,9 @@ The boundary governs **instantiated projects**. In the framework repository itse
 | Path | Category | Project content (for Mixed) / notes |
 |------|----------|-------------------------------------|
 | `FRAMEWORK.md` | Framework | This file |
-| `.claude/skills/SDLC-*/SKILL.md` | Framework | The automation skills — except `SDLC-release`, which is Upstream-only (see its row). The `SDLC-` name prefix is reserved for framework skills; project-created skills (see the Working Agreement) use other names and are project content |
-| `.claude/skills/SDLC-release/SKILL.md` | Upstream-only | Framework release procedure (version bump, changelog, tagging) — operates only on the framework repository; removed at instantiation |
-| `.claude/skills/shared/*.md` | Framework | Procedures shared by multiple skills |
+| `.agents/skills/SDLC-*/SKILL.md` | Framework | The automation skills — except `SDLC-release`, which is Upstream-only (see its row). The `SDLC-` name prefix is reserved for framework skills; project-created skills (see the Working Agreement) use other names and are project content |
+| `.agents/skills/SDLC-release/SKILL.md` | Upstream-only | Framework release procedure (version bump, changelog, tagging) — operates only on the framework repository; removed at instantiation |
+| `.agents/skills/shared/*.md` | Framework | Procedures shared by multiple skills |
 | `1-spec/goals/_template.md`, `1-spec/user-stories/_template.md`, `1-spec/requirements/_template.md`, `1-spec/assumptions/_template.md`, `1-spec/constraints/_template.md` | Framework | Specification artifact templates |
 | `2-design/_template.md` | Framework | Design document template |
 | `3-code/implementation-log/_template.md`, `3-code/implementation-log/_fix_template.md` | Framework | Implementation log templates |
@@ -31,11 +31,11 @@ The boundary governs **instantiated projects**. In the framework repository itse
 | `decisions/_template.md`, `decisions/_template.history.md` | Framework | Decision templates |
 | `decisions/PROCEDURES.md` | Framework | Decision recording/deprecation/supersession procedures |
 | `4-deploy/scripts/README.md` | Framework | Directory rules for deployment scripts |
-| `CLAUDE.md` | Mixed | `## Project Overview` (including `### Current State`) |
-| `1-spec/CLAUDE.spec.md` | Mixed | Rows of the decisions index and of the five artifact indexes |
-| `2-design/CLAUDE.design.md` | Mixed | Rows of the Design Documents Index and of the decisions index |
-| `3-code/CLAUDE.code.md` | Mixed | `## Components` entries |
-| `4-deploy/CLAUDE.deploy.md` | Mixed | Rows of the decisions index and of the Runbooks Index |
+| `AGENTS.md` | Mixed | `## Project Overview` (including `### Current State`) |
+| `1-spec/AGENTS.spec.md` | Mixed | Rows of the decisions index and of the five artifact indexes |
+| `2-design/AGENTS.design.md` | Mixed | Rows of the Design Documents Index and of the decisions index |
+| `3-code/AGENTS.code.md` | Mixed | `## Components` entries |
+| `4-deploy/AGENTS.deploy.md` | Mixed | Rows of the decisions index and of the Runbooks Index |
 | `1-spec/stakeholders.md` | Mixed | Stakeholder Table rows |
 | `3-code/tasks.md` | Mixed | Task rows, phase groupings, and the Execution Plan content |
 | `3-code/verification.md` | Mixed | Rows of the global verification index (per-component `verification.md` files are Project content) |
@@ -49,5 +49,5 @@ Everything else — specification artifacts, design documents, decision records 
 ## Rules
 
 1. **Project work stays out of framework files**: never modify Framework files or the framework-owned parts of Mixed files during project work. If a task seems to require it — including fixing an apparent framework bug — surface it to the user instead; framework corrections belong upstream.
-2. **Local customization is a fork**: deliberately diverging from the framework (editing a skill, a template, or a procedure) is an "always ask" action (see Graduated Safeguards in `CLAUDE.md`) and must be recorded as a decision, because it changes framework behavior for every future task and complicates upgrades.
+2. **Local customization is a fork**: deliberately diverging from the framework (editing a skill, a template, or a procedure) is an "always ask" action (see Graduated Safeguards in `AGENTS.md`) and must be recorded as a decision, because it changes framework behavior for every future task and complicates upgrades.
 3. **Manifest maintenance is upstream work**: this manifest is framework-owned; the framework repository updates it in the same operation that adds, moves, or removes framework files. Projects never edit it.

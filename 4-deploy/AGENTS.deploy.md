@@ -1,4 +1,4 @@
-Phase-specific instructions for the **Deploy** phase. Extends [../CLAUDE.md](../CLAUDE.md).
+Phase-specific instructions for the **Deploy** phase. Extends [../AGENTS.md](../AGENTS.md).
 
 ## Purpose
 
@@ -52,7 +52,7 @@ There is no dedicated deploy skill: planned deploy work (IaC tasks, runbook task
 7. Manual-test scenarios may be referenced by rows of the global verification index (`3-code/verification.md`) — when renaming, removing, or repurposing a scenario, update the referencing rows in the same operation.
 
 ### Common Decision Triggers
-When a significant decision emerges, follow [CLAUDE.md — Decisions](../CLAUDE.md#recording-deprecating-or-superseding-decisions). Common triggers: secret management, environment promotion rules, rollback procedures, IaC tooling, CI/CD conventions.
+When a significant decision emerges, follow [AGENTS.md — Decisions](../AGENTS.md#recording-deprecating-or-superseding-decisions). Common triggers: secret management, environment promotion rules, rollback procedures, IaC tooling, CI/CD conventions.
 
 ---
 

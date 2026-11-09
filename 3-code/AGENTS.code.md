@@ -1,4 +1,4 @@
-Phase-specific instructions for the **Code** phase. Extends [../CLAUDE.md](../CLAUDE.md).
+Phase-specific instructions for the **Code** phase. Extends [../AGENTS.md](../AGENTS.md).
 
 ## Purpose
 
@@ -26,7 +26,7 @@ All source code, configuration, and assets for a component **must reside within 
 
 Scripts and commands for each component are documented in that component's own codebase (package.json, Makefile, README, or equivalent). Check there first.
 
-When invoking any command, apply active decisions from the component's `CLAUDE.md` whose trigger conditions match.
+When invoking any command, apply active decisions from the component's `AGENTS.md` whose trigger conditions match.
 
 ---
 
@@ -89,4 +89,4 @@ Markers and index rows are two views of the same links and are maintained **toge
 
 - Implementation follows designs in `2-design/`
 - Tests verify requirements from `1-spec/` — each requirement-verifying test carries a `Verifies:` marker and a row in a verification index (see Testing Conventions)
-- Infrastructure code goes in `4-deploy/`; when a coding task modifies IaC, the deploy phase instructions ([`CLAUDE.deploy.md`](../4-deploy/CLAUDE.deploy.md)) apply as well
+- Infrastructure code goes in `4-deploy/`; when a coding task modifies IaC, the deploy phase instructions ([`AGENTS.deploy.md`](../4-deploy/AGENTS.deploy.md)) apply as well

@@ -9,7 +9,7 @@ You are applying a user-reported fix, bug correction, or modification to the cod
 
 ### Phase Validation
 
-Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `CLAUDE.md`. Then follow the matching case below:
+Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `AGENTS.md`. Then follow the matching case below:
 
 1. **`Not initialized`** — **Stop**, recommend `/SDLC-init`, and do not proceed.
 
@@ -30,7 +30,7 @@ Gather enough context from the user to understand the problem and determine the 
    - Error messages or logs (if available)
 
 2. **Affected area** — Which part(s) of the system are involved? Help the user identify:
-   - Which **component(s)** are affected (e.g., frontend, backend) — refer to the components listed in `3-code/CLAUDE.code.md`
+   - Which **component(s)** are affected (e.g., frontend, backend) — refer to the components listed in `3-code/AGENTS.code.md`
    - Which **scripts or runbooks** are involved (if the fix targets deploy/operations artifacts in `4-deploy/`)
    - Which **specific files, modules, or features** they believe are involved (if they know)
 
@@ -44,7 +44,7 @@ Once you have sufficient context, summarize your understanding back to the user 
 
 #### Assigning the fix identifier
 
-After the user confirms the understanding, derive a descriptive kebab-case slug from the elicited problem and form the fix ID as `FIX-<kebab-slug>` (e.g., `FIX-asset-list-pagination-off-by-one`). The fix ID is the permanent handle for this work and the filename of its implementation log. Follow the `PREFIX-kebab-name` artifact-naming convention from [`CLAUDE.md`](../../../CLAUDE.md). Propose the ID to the user, accept any adjustment they request, then check whether `3-code/implementation-log/<FIX-ID>.md` already exists:
+After the user confirms the understanding, derive a descriptive kebab-case slug from the elicited problem and form the fix ID as `FIX-<kebab-slug>` (e.g., `FIX-asset-list-pagination-off-by-one`). The fix ID is the permanent handle for this work and the filename of its implementation log. Follow the `PREFIX-kebab-name` artifact-naming convention from [`AGENTS.md`](../../../AGENTS.md). Propose the ID to the user, accept any adjustment they request, then check whether `3-code/implementation-log/<FIX-ID>.md` already exists:
 
 - **No existing log** — this is a fresh fix. Proceed to Context Gathering on the fresh branch.
 - **Existing log** — surface it to the user. Ask whether (a) this invocation **resumes** the prior fix (the new information supplements the existing record — proceed on the Resume branch), or (b) it is a **distinct** fix that happens to share a slug (in which case agree on a disambiguated slug with the user before proceeding). Do not proceed until the user answers.
@@ -68,10 +68,10 @@ Before writing any code, gather all necessary context.
 
 Based on the elicited information, determine which component(s) are affected. For each affected component:
 
-- Read its `CLAUDE.md` file (e.g., `3-code/frontend/CLAUDE.md`, `3-code/backend/CLAUDE.md`).
+- Read its `AGENTS.md` file (e.g., `3-code/frontend/AGENTS.md`, `3-code/backend/AGENTS.md`).
 - Note its technology stack, conventions, and directory structure.
 
-If the fix targets deploy/operations artifacts, also read `4-deploy/CLAUDE.deploy.md`.
+If the fix targets deploy/operations artifacts, also read `4-deploy/AGENTS.deploy.md`.
 
 #### 2. Read Relevant Code
 
@@ -81,11 +81,11 @@ If the user pointed to specific files, start there. Otherwise, use search tools 
 
 #### 3. Review Design Documents
 
-Read the relevant design documents, selected via the Design Documents Index in `2-design/CLAUDE.design.md` — at minimum the ones that cover the area being modified. Understand the intended design so you can assess whether the fix aligns with it or introduces a divergence.
+Read the relevant design documents, selected via the Design Documents Index in `2-design/AGENTS.design.md` — at minimum the ones that cover the area being modified. Understand the intended design so you can assess whether the fix aligns with it or introduces a divergence.
 
 #### 4. Check Applicable Decisions
 
-For each affected component, review the `## Relevant Decisions` table in its `CLAUDE.md`:
+For each affected component, review the `## Relevant Decisions` table in its `AGENTS.md`:
 - Identify any decisions whose trigger conditions match the current fix.
 - Read the full decision file(s) for applicable decisions (follow the File column links).
 - These decisions **must** be applied during implementation.
@@ -153,7 +153,7 @@ If the fix requires a significant divergence from the design documents, **stop a
 
 #### 2. Implement
 
-- Respect the component isolation rules in `3-code/CLAUDE.code.md`.
+- Respect the component isolation rules in `3-code/AGENTS.code.md`.
 - Write clear, self-documenting code following language/framework conventions and established best practices (e.g., SOLID principles, DRY, separation of concerns, meaningful naming, proper error handling, security best practices).
 - Prefer splitting code across multiple files over keeping a single large file, when compatible with language/framework conventions.
 - Keep functions small and focused.
@@ -167,7 +167,7 @@ If the fix requires a significant divergence from the design documents, **stop a
 - **Bug fix tests**: when fixing a bug: (a) write a failing test that reproduces the bug before making any fix, (b) fix the bug and verify the test passes, (c) search the same component's codebase for the same bug pattern elsewhere — if found, **ask the user** whether to fix those occurrences too.
 - **Change/enhancement tests**: when applying a modification or enhancement, write tests that verify the new or changed behavior.
 - **Regression tests**: ensure existing tests still pass — the fix must not break other functionality.
-- **Verification traceability**: if the fix relates to requirements (Context Gathering step 5), mark each requirement-verifying test with a `Verifies:` marker (AC-level `REQ-…/AC-…` references preferred) and record the corresponding rows in the owning component's `verification.md` in the same operation — following the Testing Conventions in `3-code/CLAUDE.code.md` (create the index with the documented structure if missing). When the fix renames, moves, or deletes existing tests, update their index rows in the same operation.
+- **Verification traceability**: if the fix relates to requirements (Context Gathering step 5), mark each requirement-verifying test with a `Verifies:` marker (AC-level `REQ-…/AC-…` references preferred) and record the corresponding rows in the owning component's `verification.md` in the same operation — following the Testing Conventions in `3-code/AGENTS.code.md` (create the index with the documented structure if missing). When the fix renames, moves, or deletes existing tests, update their index rows in the same operation.
 - **Test organization**: follow the testing best practices and conventions of the project's tech stack (directory structure, naming, test runner configuration, fixtures, etc.).
 
 #### 4. Run Tests and Verify
@@ -201,7 +201,7 @@ Read and follow the shared procedure in [`shared/design-gap-procedure.md`](../sh
 
 - **Be conversational during elicitation** — the first part of this skill is a dialogue. Ask clear, focused questions. Don't overwhelm the user with all questions at once; adapt based on what they've already told you.
 - After Context Gathering and before entering the Execution section, briefly state the elicited problem, the affected surface, the applicable decisions, and the planned approach. Do not ask for permission to begin unless genuine ambiguity remains (see Context Gathering step 8).
-- **The implementation log is the gate into Execution, not a closing artifact.** After Context Gathering and before any Execution-path action — writing product files, running tests, editing design documents or `CLAUDE.md`, proposing new decisions — create `3-code/implementation-log/<FIX-ID>.md` from `_fix_template.md` and populate its `## Understanding` section in full, reusing the synthesis you just briefed. Then enter Execution, appending entries (`[WRITE]` / `[Q&A]` / `[RECONSIDER]` / `[PROBLEM]` / `[FIX]` / `[DESIGN-GAP]` / `[TENSION]` / `[TEST]` / `[NOTE]`) as work progresses — never batched at the end — and close with a `[CONCLUSION]`. Full rules live in the "Implementation Log" section above.
+- **The implementation log is the gate into Execution, not a closing artifact.** After Context Gathering and before any Execution-path action — writing product files, running tests, editing design documents or `AGENTS.md`, proposing new decisions — create `3-code/implementation-log/<FIX-ID>.md` from `_fix_template.md` and populate its `## Understanding` section in full, reusing the synthesis you just briefed. Then enter Execution, appending entries (`[WRITE]` / `[Q&A]` / `[RECONSIDER]` / `[PROBLEM]` / `[FIX]` / `[DESIGN-GAP]` / `[TENSION]` / `[TEST]` / `[NOTE]`) as work progresses — never batched at the end — and close with a `[CONCLUSION]`. Full rules live in the "Implementation Log" section above.
 - During implementation, work autonomously — do not ask for confirmation at every step. The stop-and-ask points are explicitly defined in the instructions (elicitation, approach confirmation, design gaps, tension resolution, bug pattern occurrences).
 - **After completing the fix, report the outcome and ask the user how they want to proceed** — e.g., review changes, commit, run additional tests.
 - When a design gap is found, present it clearly with context, options, and trade-offs. Do not minimize the gap or push toward a specific resolution.
@@ -211,11 +211,11 @@ Read and follow the shared procedure in [`shared/design-gap-procedure.md`](../sh
 - **Read-before-write**: always read existing files before proposing changes.
 - **Elicit before implementing**: never start coding before understanding the problem. If the user's initial description is insufficient, ask for clarification.
 - **Log is mandatory and append-only**: the per-fix implementation log under `3-code/implementation-log/<FIX-ID>.md` must exist and contain the Understanding section before the Execution section starts, and new entries (`[WRITE]` / `[Q&A]` / `[RECONSIDER]` / `[PROBLEM]` / `[FIX]` / `[DESIGN-GAP]` / `[TENSION]` / `[TEST]` / `[NOTE]`) must be appended as work progresses. Existing content is never edited or removed — corrections are appended as new entries. Each run of the skill terminates by appending a `[CONCLUSION]` entry; a reopened fix will therefore accumulate multiple `[RESUMED]` / `[CONCLUSION]` pairs over time.
-- **Decisions are mandatory**: applicable decisions from the component's `CLAUDE.md` must be followed. If a decision conflicts with the fix, surface it to the user — do not silently ignore it.
+- **Decisions are mandatory**: applicable decisions from the component's `AGENTS.md` must be followed. If a decision conflicts with the fix, surface it to the user — do not silently ignore it.
 - **Minimal changes**: change only what is necessary to address the reported issue. Do not add unrelated improvements or refactor surrounding code unless explicitly requested.
 - **No auto-commit**: leave all changes for user review. Do not commit or push.
 - **Traceability**: if the fix reveals that a requirement is missing or incorrect, surface it to the user and recommend `/SDLC-elicit` to address it. If the fix reveals that a planned task in `tasks.md` is affected (e.g., the fix pre-empts part of a future task, or a task's assumptions are now invalid), note it in the output.
-- **Deploy awareness**: if the fix touches infrastructure as code (Terraform, Dockerfiles, CI/CD pipelines, deployment scripts, etc.), also read `4-deploy/CLAUDE.deploy.md`, review its decisions index, and follow its instructions alongside these.
+- **Deploy awareness**: if the fix touches infrastructure as code (Terraform, Dockerfiles, CI/CD pipelines, deployment scripts, etc.), also read `4-deploy/AGENTS.deploy.md`, review its decisions index, and follow its instructions alongside these.
 - **External tool and library dependencies**: when a fix requires tools or libraries that are not available in the current environment (system packages like ffmpeg, database engines, runtime tools, etc.), **always notify the user before attempting to install them**. If the user approves and installation fails (e.g., no sudo access, missing package manager), provide the user with clear instructions on how to install the dependency themselves and **wait for the user to confirm** that installation is complete before proceeding. Never silently install system-level dependencies or work around their absence without user awareness.
 - **Task plan impact**: if the fix changes behavior, interfaces, or data structures that planned tasks in `tasks.md` depend on, note which tasks may be affected in the output so the user can decide whether to update the implementation plan.
 

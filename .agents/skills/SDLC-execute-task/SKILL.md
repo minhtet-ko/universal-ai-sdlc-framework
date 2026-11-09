@@ -25,7 +25,7 @@ The `Task` column in `tasks.md` contains a **brief, indicative description** —
 1. **Requirements** (linked in the `Req` column) — the acceptance criteria define what "done" means.
 2. **Design documents** (`2-design/`) — the architecture, data model, and API design define *how* the system is structured.
 3. **Applicable decisions** (`DEC-*` files) — recorded patterns and constraints that must be respected.
-4. **SDLC system instructions** (`CLAUDE.md`, phase-specific `CLAUDE.*.md` files) — project-wide rules and conventions.
+4. **SDLC system instructions** (`AGENTS.md`, phase-specific `AGENTS.*.md` files) — project-wide rules and conventions.
 5. **Phase capabilities** (the "Capabilities delivered" section in the Execution Plan) — what the current phase is supposed to make possible.
 6. **Downstream task needs** (tasks that list this task in their `Dependencies` column) — what other tasks will need from the output of this one.
 
@@ -35,7 +35,7 @@ A mismatch between the task description and the authoritative sources is **not**
 
 ### Phase Validation
 
-Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `CLAUDE.md`. Then follow the matching case below:
+Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `AGENTS.md`. Then follow the matching case below:
 
 1. **`Not initialized`** — **Stop**, recommend `/SDLC-init`, and do not proceed.
 
@@ -51,7 +51,7 @@ Before doing anything else, read the `**Phase**:` field of the `### Current Stat
 
 Use this branch only when the skill was invoked with no additional user context (see "Invocation Modes" above).
 
-1. **Read code phase instructions**: Open `3-code/CLAUDE.code.md`.
+1. **Read code phase instructions**: Open `3-code/AGENTS.code.md`.
 
 2. **Read the task list**: Open `3-code/tasks.md`.
 
@@ -78,7 +78,7 @@ Use this branch only when the skill was invoked with no additional user context 
 
 Use this branch only when the skill was invoked with user-provided context (see "Invocation Modes" above).
 
-1. **Read code phase instructions**: Open `3-code/CLAUDE.code.md`.
+1. **Read code phase instructions**: Open `3-code/AGENTS.code.md`.
 
 2. **Read the task list**: Open `3-code/tasks.md`.
 
@@ -131,16 +131,16 @@ Go beyond the task description to understand the task's **actual purpose** in th
 
 #### 3. Review Design Documents
 
-Read the relevant design documents, selected via the Design Documents Index in `2-design/CLAUDE.design.md` — at minimum the ones that cover the area being implemented. Understand the intended design for this task.
+Read the relevant design documents, selected via the Design Documents Index in `2-design/AGENTS.design.md` — at minimum the ones that cover the area being implemented. Understand the intended design for this task.
 
 #### 4. Check Applicable Decisions
 
-Read the `CLAUDE.md` file of the component this task belongs to (`3-code/<component-name>/CLAUDE.md`, determined by which Task Table section the task appears in). Review the `## Relevant Decisions` table:
+Read the `AGENTS.md` file of the component this task belongs to (`3-code/<component-name>/AGENTS.md`, determined by which Task Table section the task appears in). Review the `## Relevant Decisions` table:
 - Scan the table and identify any decisions whose trigger conditions match the current task.
 - Read the full decision file(s) for applicable decisions (follow the File column links).
 - These decisions **must** be applied during implementation.
 
-Additionally, if the task involves multiple components, also read the `CLAUDE.md` file of each involved component and review their `## Relevant Decisions` tables — decisions from all involved components must be considered and applied. For tasks in the `Setup & Infrastructure` or `Deploy & Operations` sections, also check the decisions indexes in `2-design/CLAUDE.design.md` and `4-deploy/CLAUDE.deploy.md` respectively.
+Additionally, if the task involves multiple components, also read the `AGENTS.md` file of each involved component and review their `## Relevant Decisions` tables — decisions from all involved components must be considered and applied. For tasks in the `Setup & Infrastructure` or `Deploy & Operations` sections, also check the decisions indexes in `2-design/AGENTS.design.md` and `4-deploy/AGENTS.deploy.md` respectively.
 
 #### 5. Check for Constraint Tensions
 
@@ -204,7 +204,7 @@ Follow one of two paths based on complexity assessment. Throughout both paths, m
 2. **Check for design gaps before coding**: If you anticipate a significant divergence from the design documents (not from the task description — see the distinction in "Task Descriptions Are Indicative"), **stop and follow the Design Gap procedure** (below) before writing implementation code.
 
 3. **Implement**:
-   - Respect the component isolation rules in `3-code/CLAUDE.code.md`.
+   - Respect the component isolation rules in `3-code/AGENTS.code.md`.
    - Write clear, self-documenting code following language/framework conventions and established best practices (e.g., SOLID principles, DRY, separation of concerns, meaningful naming, proper error handling, security best practices).
    - Prefer splitting code across multiple files over keeping a single large file, when compatible with language/framework conventions.
    - Keep functions small and focused.
@@ -214,7 +214,7 @@ Follow one of two paths based on complexity assessment. Throughout both paths, m
 
 4. **Write tests**:
    - **Acceptance criteria coverage**: for each requirement linked in the task's `Req` column, review its acceptance criteria. Write tests that verify every acceptance criterion that is enabled by this task's implementation. Criteria that cannot be verified by an automated test (e.g., manual usability checks, real-world performance validation) are noted in the implementation log and deferred to the phase's manual-testing readiness task, which records them as `manual` rows in the global verification index.
-   - **Verification traceability**: mark each requirement-verifying test with a `Verifies:` marker (AC-level `REQ-…/AC-…` references preferred) and record the corresponding rows in the owning component's `verification.md` in the same operation — following the Testing Conventions in `3-code/CLAUDE.code.md`. If the component has no `verification.md` yet, create it with the documented structure. When existing tests are renamed, moved, or deleted, update their index rows in the same operation.
+   - **Verification traceability**: mark each requirement-verifying test with a `Verifies:` marker (AC-level `REQ-…/AC-…` references preferred) and record the corresponding rows in the owning component's `verification.md` in the same operation — following the Testing Conventions in `3-code/AGENTS.code.md`. If the component has no `verification.md` yet, create it with the documented structure. When existing tests are renamed, moved, or deleted, update their index rows in the same operation.
    - **Test organization**: follow the testing best practices and conventions of the project's tech stack (directory structure, naming, test runner configuration, fixtures, etc.).
    - **Unit tests**: write unit tests for new functionality — use descriptive test names that explain the scenario being tested.
    - **Integration tests**: if the task involves communication between different components, or between different modules within the same component, write integration tests in addition to unit tests.
@@ -236,13 +236,13 @@ Follow one of two paths based on complexity assessment. Throughout both paths, m
 
 8. **Update status**: Set the task's Status to `Done` and update the `Updated` column with today's date in `tasks.md`.
 
-9. **Propagate artifact statuses**: completing a task can complete upstream Specification artifacts. Check and apply, following the lifecycles in `1-spec/CLAUDE.spec.md`:
+9. **Propagate artifact statuses**: completing a task can complete upstream Specification artifacts. Check and apply, following the lifecycles in `1-spec/AGENTS.spec.md`:
 
    1. **Requirements** — for each requirement linked in this task's `Req` column: scan the whole Task Table for tasks linking the same requirement. If the requirement has `Status: Approved` and all its linked tasks are `Done` (ignoring `Cancelled` and `Decomposed` ones — but at least one must be `Done`: a requirement whose linked tasks were all cancelled or decomposed has not been implemented), set its Status to `Implemented`.
    2. **User stories** — for each user story whose derived requirements include a requirement flipped in the previous step: if the story has `Status: Approved` and all its derived requirements are `Implemented`, set its Status to `Implemented`.
    3. **Goals** — for each goal all of whose linked requirements (directly or via its user stories) are now `Implemented`: review its Success Criteria and **propose** `Achieved` to the user, stating which criteria appear satisfied and which need real-world verification. Set `Achieved` (ticking the criteria checkboxes) only after the user confirms — an unconfirmed goal simply stays `Approved`.
 
-   For every status change: append the transition date to the new status value (e.g., `Implemented (YYYY-MM-DD)` — see the status-dates convention in `1-spec/CLAUDE.spec.md`), update the artifact file and its index row in `1-spec/CLAUDE.spec.md` in the same operation, and record the propagation in the implementation log (`[WRITE]` entries). A lifecycle advancement is a status-only change: it does **not** trigger the status-downgrade rule and does not flip assessment staleness (Current State Protocol rule 2).
+   For every status change: append the transition date to the new status value (e.g., `Implemented (YYYY-MM-DD)` — see the status-dates convention in `1-spec/AGENTS.spec.md`), update the artifact file and its index row in `1-spec/AGENTS.spec.md` in the same operation, and record the propagation in the implementation log (`[WRITE]` entries). A lifecycle advancement is a status-only change: it does **not** trigger the status-downgrade rule and does not flip assessment staleness (Current State Protocol rule 2).
 
    **Coverage is health, not a gate**: flipping a requirement to `Implemented` does not require verification coverage. However, when flipping one, read its rows in the verification indexes (the component ones and the global `3-code/verification.md`) — if the requirement, or any of its acceptance criteria, has no coverage recorded, report the gap in the output. Do not block the status change on it.
 
@@ -270,7 +270,7 @@ Read and follow the shared procedure in [`shared/design-gap-procedure.md`](../sh
 
 ### Current State Tracking
 
-Whenever the skill completes a task (status set to `Done`) or decomposes a task, update the `### Current State` subsection in `CLAUDE.md` following the Current State Protocol defined there:
+Whenever the skill completes a task (status set to `Done`) or decomposes a task, update the `### Current State` subsection in `AGENTS.md` following the Current State Protocol defined there:
 
 1. **`**Task progress**:` line** — update it after every task completion or decomposition (e.g., `**Task progress**: 5/42 tasks done — currently in Phase 2 (Core Data Pipeline)`).
 2. **Design gap resolutions** — if the Design Gap Procedure was triggered and resulted in design document updates or new decisions, also update the `**Design documents**:` line, and, if the `**Completeness assessment**:` line is in active form, flip it to `stale (design changed since)` per protocol rule 2.
@@ -280,7 +280,7 @@ If a task execution only changes task status (no design impact), update only the
 ### Interaction Style
 
 - After completing Task Preparation and before creating the log, briefly state which task was selected, its linked requirements, and applicable decisions. If your synthesized understanding of the task's scope differs from its brief description, note the actual scope you will implement. Do not ask for permission to begin unless genuine ambiguity exists (see Task Preparation step 7).
-- **The implementation log is the gate into Execution, not a closing artifact.** After the briefing and before any Execution-path action — flipping the task's status to `In Progress`, writing product files, running tests, editing `tasks.md` or `CLAUDE.md`, proposing new decisions — create `3-code/implementation-log/<task-id>.md` from the template and populate its `## Understanding` section in full, reusing the synthesis you just briefed. Then enter Execution, appending entries (`[WRITE]` / `[Q&A]` / `[RECONSIDER]` / `[PROBLEM]` / `[FIX]` / `[DESIGN-GAP]` / `[TENSION]` / `[TEST]` / `[NOTE]`) as work progresses — never batched at the end — and close with a `[CONCLUSION]`. Full rules live in the "Implementation Log" section above.
+- **The implementation log is the gate into Execution, not a closing artifact.** After the briefing and before any Execution-path action — flipping the task's status to `In Progress`, writing product files, running tests, editing `tasks.md` or `AGENTS.md`, proposing new decisions — create `3-code/implementation-log/<task-id>.md` from the template and populate its `## Understanding` section in full, reusing the synthesis you just briefed. Then enter Execution, appending entries (`[WRITE]` / `[Q&A]` / `[RECONSIDER]` / `[PROBLEM]` / `[FIX]` / `[DESIGN-GAP]` / `[TENSION]` / `[TEST]` / `[NOTE]`) as work progresses — never batched at the end — and close with a `[CONCLUSION]`. Full rules live in the "Implementation Log" section above.
 - During implementation, work autonomously — do not ask for confirmation at every step. The stop-and-ask points are explicitly defined in the instructions (interrupted tasks, unmet dependencies, design gaps, ambiguity).
 - **After completing a task (executed or decomposed), report the outcome and ask the user how they want to proceed** — e.g., review changes, commit, or stop. Do not automatically start the next task.
 - When a design gap is found, present it clearly with context, options, and trade-offs. Do not minimize the gap or push toward a specific resolution.
@@ -291,11 +291,11 @@ If a task execution only changes task status (no design impact), update only the
 - **Read-before-write**: always read existing files before proposing changes.
 - **Requirements first**: read every linked requirement before writing code. Do not implement from memory or assumption.
 - **Log is mandatory and append-only**: the per-task implementation log under `3-code/implementation-log/<task-id>.md` must exist and contain the Understanding section before the Execution section starts, and new entries (`[WRITE]` / `[Q&A]` / `[RECONSIDER]` / `[PROBLEM]` / `[FIX]` / `[DESIGN-GAP]` / `[TENSION]` / `[TEST]` / `[NOTE]`) must be appended as work progresses. Existing content is never edited or removed — corrections are appended as new entries. Each run of the skill terminates by appending a `[CONCLUSION]` entry; a reopened task will therefore accumulate multiple `[RESUMED]` / `[CONCLUSION]` pairs over time. A pre-existing log file with a task status other than `In Progress` is an inconsistency that must be surfaced to the user before continuing.
-- **Decisions are mandatory**: applicable decisions from the component's `CLAUDE.md` must be followed. If a decision conflicts with the task, surface it to the user — do not silently ignore it.
+- **Decisions are mandatory**: applicable decisions from the component's `AGENTS.md` must be followed. If a decision conflicts with the task, surface it to the user — do not silently ignore it.
 - **Task list integrity**: never reorder the task list within a phase in `tasks.md`, and never rename pre-existing task IDs.
 - **No auto-commit**: leave all changes for user review. Do not commit or push.
 - **Traceability**: if the implementation reveals that a requirement is missing or incorrect, surface it to the user and recommend `/SDLC-elicit` to address it.
-- **Deploy awareness**: if the task touches infrastructure as code (Terraform, Dockerfiles, CI/CD pipelines, deployment scripts, etc.), also read `4-deploy/CLAUDE.deploy.md`, review its decisions index, and follow its instructions alongside these.
+- **Deploy awareness**: if the task touches infrastructure as code (Terraform, Dockerfiles, CI/CD pipelines, deployment scripts, etc.), also read `4-deploy/AGENTS.deploy.md`, review its decisions index, and follow its instructions alongside these.
 - **External tool and library dependencies**: when a task requires tools or libraries that are not available in the current environment (system packages like ffmpeg, database engines, runtime tools, etc.), **always notify the user before attempting to install them**. If the user approves and installation fails (e.g., no sudo access, missing package manager), provide the user with clear instructions on how to install the dependency themselves and **wait for the user to confirm** that installation is complete before proceeding. Never silently install system-level dependencies or work around their absence without user awareness.
 
 ### Output

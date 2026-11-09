@@ -12,9 +12,9 @@ You are releasing a new version of the AI SDLC Framework from its own repository
 This skill applies only to the **framework repository**. Before doing anything, verify:
 
 - `CHANGELOG.md` and `RATIONALE.md` exist, and `README.md` is titled "AI SDLC Framework".
-- `**Phase**:` in the Current State section of `CLAUDE.md` is `Not initialized`.
+- `**Phase**:` in the Current State section of `AGENTS.md` is `Not initialized`.
 
-If any check fails, you are most likely inside an **instantiated project** where the Quick Start `rm` step was skipped: stop, explain this, and suggest removing `.claude/skills/SDLC-release/` (and any other leftover Upstream-only files) instead of releasing.
+If any check fails, you are most likely inside an **instantiated project** where the Quick Start `rm` step was skipped: stop, explain this, and suggest removing `.agents/skills/SDLC-release/` (and any other leftover Upstream-only files) instead of releasing.
 
 ### Versioning semantics
 
@@ -47,4 +47,4 @@ Versions only increase; a published tag is never moved or reused.
 
 - The stamp in `FRAMEWORK.md` is guaranteed accurate only at release commits; never bump it outside this workflow.
 - Never rewrite a released changelog section except to fix typos; corrections to a release's content are a new release.
-- All output in English (Language Policy in `CLAUDE.md`).
+- All output in English (Language Policy in `AGENTS.md`).

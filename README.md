@@ -22,7 +22,7 @@ FRAMEWORK_VERSION=$(git ls-remote --tags --sort=-v:refname https://github.com/pa
 npx degit "pangon/ai-sdlc-framework#${FRAMEWORK_VERSION}" my-project
 cd my-project
 rm -f CHANGELOG.md CONTRIBUTING.md CONTRIBUTORS.md LICENSE NOTICE RATIONALE.md README.md
-rm -rf .claude/skills/SDLC-release
+rm -rf .agents/skills/SDLC-release
 git init && git add -A && git commit -m "Adopt AI SDLC Framework"
 ```
 
@@ -35,26 +35,26 @@ git init && git add -A && git commit -m "Adopt AI SDLC Framework"
 1. Download the source archive of the latest [release](https://github.com/pangon/ai-sdlc-framework/releases) (or clone and `git checkout v<version>`).
 2. Copy all files and directories (including hidden ones like `.claude/`) into your new project folder.
 3. Remove the `.git/` directory, if present, to start with a fresh history.
-4. Remove repo-specific files: `rm -f CHANGELOG.md CONTRIBUTING.md CONTRIBUTORS.md LICENSE NOTICE RATIONALE.md README.md && rm -rf .claude/skills/SDLC-release`.
+4. Remove repo-specific files: `rm -f CHANGELOG.md CONTRIBUTING.md CONTRIBUTORS.md LICENSE NOTICE RATIONALE.md README.md && rm -rf .agents/skills/SDLC-release`.
 5. Initialize a new repository: `git init && git add -A && git commit -m "Adopt AI SDLC Framework"`.
 
 ### Then
 
-1. **Run `/SDLC-init`** in Claude Code: the initialization skill sets up the project description in `CLAUDE.md` so agents have the right context from the start.
-2. **Work through the phases** (Specification → Design → Code → Deploy) using the built-in [skills](#skills) — type `/` followed by a skill name to automate each step, from requirements gathering to deployment. Alternatively, you can use custom prompts: the `CLAUDE.<phase>.md` hierarchy provides all the context the agent needs to operate correctly in each phase.
+1. **Run `/SDLC-init`** in Claude Code: the initialization skill sets up the project description in `AGENTS.md` so agents have the right context from the start.
+2. **Work through the phases** (Specification → Design → Code → Deploy) using the built-in [skills](#skills) — type `/` followed by a skill name to automate each step, from requirements gathering to deployment. Alternatively, you can use custom prompts: the `AGENTS.<phase>.md` hierarchy provides all the context the agent needs to operate correctly in each phase.
 
-> **Manual edits must never be made.** All changes to artifacts and code go through an AI agent whose behavior is governed by the instruction files, existing artifacts, and ideally a skill. This ensures that procedures are followed, decisions are recorded, and the system stays consistent. See the Working Agreement in [`CLAUDE.md`](CLAUDE.md) for the full rules, including the risks of free-prompting and of AI tools that do not follow these instructions.
+> **Manual edits must never be made.** All changes to artifacts and code go through an AI agent whose behavior is governed by the instruction files, existing artifacts, and ideally a skill. This ensures that procedures are followed, decisions are recorded, and the system stays consistent. See the Working Agreement in [`AGENTS.md`](AGENTS.md) for the full rules, including the risks of free-prompting and of AI tools that do not follow these instructions.
 
 ## Structure
 
 ```
-├── CLAUDE.md                         # Root AI instructions (start here)
+├── AGENTS.md                         # Root AI instructions (start here)
 ├── FRAMEWORK.md                      # Framework version + framework/project boundary manifest
 ├── RATIONALE.md                      # Core principles and design rationale
 ├── CHANGELOG.md                      # Release history (removed at instantiation)
 │
 ├── 1-spec/                           # WHAT and WHY
-│   ├── CLAUDE.spec.md                # Phase instructions, decisions index, artifact indexes
+│   ├── AGENTS.spec.md                # Phase instructions, decisions index, artifact indexes
 │   ├── stakeholders.md               # Stakeholder definitions
 │   ├── goals/                        # GOAL-kebab-name.md + _template.md
 │   ├── user-stories/                 # US-kebab-name.md + _template.md
@@ -63,28 +63,28 @@ git init && git add -A && git commit -m "Adopt AI SDLC Framework"
 │   └── constraints/                  # CON-kebab-name.md + _template.md
 │
 ├── 2-design/                         # HOW
-│   ├── CLAUDE.design.md              # Phase instructions, design documents index, decisions index
+│   ├── AGENTS.design.md              # Phase instructions, design documents index, decisions index
 │   ├── architecture.md               # System architecture (always present)
 │   └── _template.md                  # Template for the project-defined design documents
 │
 ├── 3-code/                           # BUILD
-│   ├── CLAUDE.code.md                # Phase instructions and component guidelines
+│   ├── AGENTS.code.md                # Phase instructions and component guidelines
 │   ├── tasks.md                      # Development task tracker
 │   ├── verification.md               # Global verification index (manual and cross-component requirement→test rows)
 │   ├── implementation-log/           # Per-task and per-fix logs (TASK-*.md, FIX-*.md) + templates
 │   └── <component>/                  # Per-component directories (created by /SDLC-decompose)
-│       ├── CLAUDE.md                 # Component description, decisions index, addressed requirements (auto-loaded when working in the component)
+│       ├── AGENTS.md                 # Component description, decisions index, addressed requirements (auto-loaded when working in the component)
 │       └── verification.md           # Component verification index (requirement→test rows)
 │
 ├── 4-deploy/                         # SHIP
-│   ├── CLAUDE.deploy.md              # Phase instructions, decisions index, runbooks index
+│   ├── AGENTS.deploy.md              # Phase instructions, decisions index, runbooks index
 │   ├── infrastructure/               # Infrastructure as code
 │   ├── scripts/                      # Deployment and operational scripts
 │   └── runbooks/                     # Operational procedures + _template.md
 │
 ├── decisions/                        # DEC-kebab-name.md + DEC-kebab-name.history.md
 │
-└── .claude/skills/                   # Claude Code skills (automation layer)
+└── .agents/skills/                   # Claude Code skills (automation layer)
     ├── shared/                       # procedures shared by multiple skills
     ├── SDLC-init/SKILL.md            # guided project initialization
     ├── SDLC-elicit/SKILL.md          # requirements elicitation
@@ -100,7 +100,7 @@ git init && git add -A && git commit -m "Adopt AI SDLC Framework"
 
 ## Key Concepts
 
-- **Phase-based development**: each phase has a directory and a `CLAUDE.<phase>.md` file that extends the root `CLAUDE.md`. Phase gates define minimum preconditions before advancing.
+- **Phase-based development**: each phase has a directory and a `AGENTS.<phase>.md` file that extends the root `AGENTS.md`. Phase gates define minimum preconditions before advancing.
 - **Traceability**: every artifact references others by descriptive ID (`GOAL-reduce-latency`, `REQ-F-search-by-name`, `DEC-use-postgres`), creating a chain from business need to running code — down to the tests: requirement-verifying tests carry greppable `Verifies:` markers (addressing individual acceptance criteria as `REQ-…/AC-…`), mirrored in verification indexes that map each requirement to its tests. Index tables link directly to artifact files for easy navigation.
 - **Two-file decisions**: active record (`DEC-kebab-name.md`) for enforcement, history file (`DEC-kebab-name.history.md`) for audit trail. Indexed per phase with trigger conditions.
 - **Context-window efficiency**: hierarchical instructions, phase-level indexes, and the active/history split minimize how many tokens an agent needs to load.
@@ -110,19 +110,19 @@ git init && git add -A && git commit -m "Adopt AI SDLC Framework"
 
 The framework structure starts empty. Project-specific artifacts are created progressively as you work through each phase — not all at once.
 
-- **At project start** (`/SDLC-init`): set the project description in `CLAUDE.md` so agents have the right context from the start.
+- **At project start** (`/SDLC-init`): set the project description in `AGENTS.md` so agents have the right context from the start.
 - **During the Specification phase** (`/SDLC-elicit`): define stakeholders, goals, constraints, assumptions, user stories, and requirements.
 - **During the Design phase** (`/SDLC-design`): select the project's design-document set (the architecture plus the documents the project's nature calls for — data model, API design, CLI design, UX design, …), then draft them. Decisions are recorded as they emerge during design work.
 - **At the start of the Code phase** (`/SDLC-decompose`, `/SDLC-implementation-plan`): identify components (creating per-component directories under `3-code/`), then generate the task backlog.
 - **During the Code phase** (`/SDLC-execute-task`, `/SDLC-fix`): implement tasks one at a time (each call selects the next pending task by default, or uses any context you provide to pick a specific one, then writes code and tests and updates the task status), or apply bug fixes and ad-hoc changes as they arise.
 
-Claude skills automate each phase of the lifecycle. Type `/skill-name` in Claude Code to invoke them. Each skill reads the root `CLAUDE.md` and the relevant phase instructions before acting.
+Claude skills automate each phase of the lifecycle. Type `/skill-name` in Claude Code to invoke them. Each skill reads the root `AGENTS.md` and the relevant phase instructions before acting.
 
 ### Setup
 
 | Skill | Purpose |
 |-------|---------|
-| `/SDLC-init` | Guided project initialization — sets the project description in `CLAUDE.md` so agents have the right context from the start. |
+| `/SDLC-init` | Guided project initialization — sets the project description in `AGENTS.md` so agents have the right context from the start. |
 
 ### Specification Phase
 

@@ -11,7 +11,7 @@ Thumbs.db
 *.code-workspace
 
 # Claude Code — per-developer local settings (matched at any depth);
-# project-shared .claude/settings.json and .claude/skills/ stay tracked.
+# project-shared .claude/settings.json and .agents/skills/ stay tracked.
 **/.claude/settings.local.json
 
 # Environment and secrets

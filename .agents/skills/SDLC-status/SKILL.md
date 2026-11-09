@@ -9,22 +9,22 @@ You are generating a comprehensive status report for the entire SDLC project.
 
 ### Setup
 
-1. Read root instructions: `CLAUDE.md` — extract Project Overview and Current State.
+1. Read root instructions: `AGENTS.md` — extract Project Overview and Current State.
 2. Read all four phase instruction files:
-   - `1-spec/CLAUDE.spec.md`
-   - `2-design/CLAUDE.design.md`
-   - `3-code/CLAUDE.code.md`
-   - `4-deploy/CLAUDE.deploy.md`
+   - `1-spec/AGENTS.spec.md`
+   - `2-design/AGENTS.design.md`
+   - `3-code/AGENTS.code.md`
+   - `4-deploy/AGENTS.deploy.md`
 3. Read `1-spec/stakeholders.md`.
 4. Read `3-code/tasks.md` (if it exists and has content), and the verification indexes that exist — `3-code/verification.md` and `3-code/<component>/verification.md`.
 5. Scan all artifact indexes in the phase files — follow File column links only when needed to resolve ambiguous statuses.
 6. List files in `decisions/` to count decisions (exclude `PROCEDURES.md`, templates, and `.history.md` files; read `.history.md` only when the corresponding active record shows Deprecated or Superseded status).
-7. List component directories in `3-code/` (directories containing a `CLAUDE.md` file).
+7. List component directories in `3-code/` (directories containing a `AGENTS.md` file).
 8. List files in `4-deploy/infrastructure/`, `4-deploy/scripts/`, `4-deploy/runbooks/` to count deployment artifacts (exclude templates and placeholder `README.md` files).
 
 ### Phase Validation
 
-Before generating the report, read the `**Phase**:` field of the `### Current State` subsection in `CLAUDE.md`:
+Before generating the report, read the `**Phase**:` field of the `### Current State` subsection in `AGENTS.md`:
 - If it is `Not initialized` (or the Project Overview still contains placeholder text) → report the project as **Not Initialized** and recommend `/SDLC-init`.
 - Otherwise → proceed with full report.
 
@@ -35,9 +35,9 @@ Present the report as a single markdown document with these sections.
 ---
 
 #### Project Overview
-- **Project**: name/description (from `CLAUDE.md` Project Overview)
+- **Project**: name/description (from `AGENTS.md` Project Overview)
 - **Date**: current date
-- **Current State**: reproduce the Current State section from `CLAUDE.md` verbatim — this is the authoritative project-level summary maintained by all skills
+- **Current State**: reproduce the Current State section from `AGENTS.md` verbatim — this is the authoritative project-level summary maintained by all skills
 
 ---
 
@@ -79,7 +79,7 @@ If requirements exist, add a **breakdown by class** (only classes that have at l
 
 | Document | Status |
 |----------|--------|
-| (one row per document in the Design Documents Index of `2-design/CLAUDE.design.md`) | (the document's `**Status**:` field) |
+| (one row per document in the Design Documents Index of `2-design/AGENTS.design.md`) | (the document's `**Status**:` field) |
 
 Report each document's `**Status**:` field verbatim (including the approval date when present).
 
@@ -91,7 +91,7 @@ Report each document's `**Status**:` field verbatim (including the approval date
 
 #### Phase 3: Code
 
-**Components**: list identified components (from `3-code/` directories with a `CLAUDE.md` file), showing name and technology. If no components → state "Not decomposed yet".
+**Components**: list identified components (from `3-code/` directories with a `AGENTS.md` file), showing name and technology. If no components → state "Not decomposed yet".
 
 **Task Summary** (if `tasks.md` exists and has tasks):
 
@@ -126,7 +126,7 @@ Report each document's `**Status**:` field verbatim (including the approval date
 
 #### Traceability Health
 
-Perform a lightweight traceability scan using the index link columns in `1-spec/CLAUDE.spec.md`, the Req column in `tasks.md`, and the verification indexes in `3-code/` (read index tables, not every file):
+Perform a lightweight traceability scan using the index link columns in `1-spec/AGENTS.spec.md`, the Req column in `tasks.md`, and the verification indexes in `3-code/` (read index tables, not every file):
 
 - **Orphaned goals**: goals not referenced in any user story's Goal column
 - **Orphaned user stories**: user stories not referenced in any requirement's Source column

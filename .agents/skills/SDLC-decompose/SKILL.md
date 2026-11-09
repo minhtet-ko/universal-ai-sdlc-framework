@@ -9,13 +9,13 @@ You are working at the Design → Code transition, analyzing design artifacts to
 
 ### Phase Validation
 
-Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `CLAUDE.md`. Then follow the matching case below:
+Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `AGENTS.md`. Then follow the matching case below:
 
 1. **`Not initialized`** — **Stop**, recommend `/SDLC-init`, and do not proceed.
 
 2. **`Specification`** — **Stop**, recommend `/SDLC-elicit` to continue refining specification or `/SDLC-design` to start the design phase, and do not proceed.
 
-3. **`Design`** — decomposition would cross the Design → Code phase gate. Recommend running `/SDLC-validate` first: gate evaluation trusts the assessment lines in Current State, and validation verifies their freshness against the actual git history. Then evaluate the Design → Code preconditions from the Phase Gates table in `CLAUDE.md` (using its "How to verify" column), except "Components identified" — that precondition is what this skill establishes — and respond based on the results:
+3. **`Design`** — decomposition would cross the Design → Code phase gate. Recommend running `/SDLC-validate` first: gate evaluation trusts the assessment lines in Current State, and validation verifies their freshness against the actual git history. Then evaluate the Design → Code preconditions from the Phase Gates table in `AGENTS.md` (using its "How to verify" column), except "Components identified" — that precondition is what this skill establishes — and respond based on the results:
 
    - **If the documents in the Design Documents Index are not all drafted** — design is incomplete. **Stop**, list which documents are still `Stub`, recommend `/SDLC-design` to continue drafting, and do not proceed.
    - **If the documents are drafted but the completeness-assessment precondition is not met** (no assessment, stale, or open Critical findings) — **strongly recommend** running a Completeness Assessment via `/SDLC-design` before decomposition. Proceed only if the user explicitly accepts the gaps.
@@ -27,10 +27,10 @@ Before doing anything else, read the `**Phase**:` field of the `### Current Stat
 
 ### Setup
 
-1. Read `2-design/CLAUDE.design.md` (phase instructions, Design Documents Index, decisions index).
+1. Read `2-design/AGENTS.design.md` (phase instructions, Design Documents Index, decisions index).
 2. Read `2-design/architecture.md` — the primary source for component identification.
 3. Read every other document listed in the Design Documents Index — interface-describing documents reveal communication boundaries; data-describing documents reveal data ownership.
-4. Read `3-code/CLAUDE.code.md` — understand the current state of the Components section.
+4. Read `3-code/AGENTS.code.md` — understand the current state of the Components section.
 5. List existing directories under `3-code/` to avoid overwriting existing structure.
 6. Read all the decisions in `decisions/`.
 
@@ -78,15 +78,15 @@ If any component boundary is ambiguous (e.g., a module could be part of a larger
 
 #### 2. Create Component Directories
 
-For each approved component, create a directory and a `CLAUDE.md` inside it:
+For each approved component, create a directory and a `AGENTS.md` inside it:
 
 ```
-3-code/<component-name>/CLAUDE.md
+3-code/<component-name>/AGENTS.md
 ```
 
-The file is named exactly `CLAUDE.md` so that Claude Code auto-loads it whenever it accesses files inside the component directory — the component's instructions and decisions index are then in effect even when work happens outside a skill. Do not use component-specific names (e.g., `CLAUDE.backend.md`): auto-loading and component discovery depend on the literal name.
+The file is named exactly `AGENTS.md` so that Claude Code auto-loads it whenever it accesses files inside the component directory — the component's instructions and decisions index are then in effect even when work happens outside a skill. Do not use component-specific names (e.g., `AGENTS.backend.md`): auto-loading and component discovery depend on the literal name.
 
-The component's `CLAUDE.md` file should contain:
+The component's `AGENTS.md` file should contain:
 
 ```markdown
 # <Component Display Name>
@@ -112,12 +112,12 @@ The component's `CLAUDE.md` file should contain:
 | [DEC-*](../../decisions/DEC-*.md) | ... | ... |
 ```
 
-Alongside `CLAUDE.md`, create the component's **verification index** at `3-code/<component-name>/verification.md`:
+Alongside `AGENTS.md`, create the component's **verification index** at `3-code/<component-name>/verification.md`:
 
 ```markdown
 # Verification Index — <Component Display Name>
 
-Maps requirements and acceptance criteria to the automated tests of this component that verify them. Structure and maintenance rules: see Testing Conventions in [`../CLAUDE.code.md`](../CLAUDE.code.md).
+Maps requirements and acceptance criteria to the automated tests of this component that verify them. Structure and maintenance rules: see Testing Conventions in [`../AGENTS.code.md`](../AGENTS.code.md).
 
 | Requirement | AC | Test | Kind | Added |
 |-------------|----|------|------|-------|
@@ -127,7 +127,7 @@ The skeleton starts empty — rows are added during implementation (`/SDLC-execu
 
 Do **not** move or restructure existing files in `2-design/`. The shared design documents remain in their phase directory. Component directories in `3-code/` supplement them with component-specific focus.
 
-#### 3. Update 3-code/CLAUDE.code.md
+#### 3. Update 3-code/AGENTS.code.md
 
 Replace the placeholder content in the `## Components` section with an entry for each component. Use this format:
 
@@ -143,7 +143,7 @@ Keep the section concise — it is a navigation aid, not a design document.
 
 #### 4. Next Step Guidance
 
-After the component structure is created and `CLAUDE.code.md` is updated, inform the user that the next step is **implementation planning** via `/SDLC-implementation-plan`. This skill reads the design artifacts and component definitions to produce a phased sequence of short development tasks in `3-code/tasks.md`, each phase ending with a deployable or testable system.
+After the component structure is created and `AGENTS.code.md` is updated, inform the user that the next step is **implementation planning** via `/SDLC-implementation-plan`. This skill reads the design artifacts and component definitions to produce a phased sequence of short development tasks in `3-code/tasks.md`, each phase ending with a deployable or testable system.
 
 ### Interaction Style
 
@@ -153,12 +153,12 @@ After the component structure is created and `CLAUDE.code.md` is updated, inform
 
 ### Current State Tracking
 
-After creating the approved component directories, update the `### Current State` subsection in `CLAUDE.md` following the Current State Protocol defined there: set `**Phase**: Code` (the advancement was confirmed by the user during Phase Validation), update `**Summary**:` to note the transition, convert the `**Completeness assessment**:` line to its passed form, recording how the gate was passed (protocol rule 3), and add the `**Components**:` line with the comma-separated component names (e.g., `**Components**: backend, frontend, tts-engine`).
+After creating the approved component directories, update the `### Current State` subsection in `AGENTS.md` following the Current State Protocol defined there: set `**Phase**: Code` (the advancement was confirmed by the user during Phase Validation), update `**Summary**:` to note the transition, convert the `**Completeness assessment**:` line to its passed form, recording how the gate was passed (protocol rule 3), and add the `**Components**:` line with the comma-separated component names (e.g., `**Components**: backend, frontend, tts-engine`).
 
 ### Rules
 
 - **Read-before-write**: always read existing files before proposing changes.
 - **Do not move existing files**: design documents remain at the `2-design/` top level.
-- **Only create skeleton directories**: the skill creates per-component directories, each with a `CLAUDE.md` and an empty `verification.md`, in `3-code/`. Actual source code, build configuration, and test scaffolding are added during implementation.
-- **Preserve existing content**: when updating `CLAUDE.code.md`, do not remove or modify content outside the sections this skill manages.
+- **Only create skeleton directories**: the skill creates per-component directories, each with a `AGENTS.md` and an empty `verification.md`, in `3-code/`. Actual source code, build configuration, and test scaffolding are added during implementation.
+- **Preserve existing content**: when updating `AGENTS.code.md`, do not remove or modify content outside the sections this skill manages.
 - **User approval required**: present identified components and wait for explicit approval before writing any files.

@@ -11,7 +11,7 @@ The plan populates `3-code/tasks.md` with tasks and an Execution Plan that group
 
 ### Phase Validation
 
-Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `CLAUDE.md`. Then follow the matching case below:
+Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `AGENTS.md`. Then follow the matching case below:
 
 1. **`Not initialized`** — **Stop**, recommend `/SDLC-init`, and do not proceed.
 
@@ -21,7 +21,7 @@ Before doing anything else, read the `**Phase**:` field of the `### Current Stat
 
 4. **`Code` with no tasks yet** (`3-code/tasks.md` contains only the template) — this is the expected entry point. Evaluate prerequisites:
 
-   - **(a)** All design documents are drafted and components are identified — re-verify the two corresponding Design → Code preconditions via the "How to verify" column of the Phase Gates table in `CLAUDE.md` (the gate was already crossed, but the state may have drifted)
+   - **(a)** All design documents are drafted and components are identified — re-verify the two corresponding Design → Code preconditions via the "How to verify" column of the Phase Gates table in `AGENTS.md` (the gate was already crossed, but the state may have drifted)
    - **(b)** `3-code/tasks.md` has no tasks yet (only the template)
 
    Then:
@@ -38,11 +38,11 @@ Read the following files — all are required context for planning:
 1. **Goals** — read every `GOAL-*.md` file in `1-spec/goals/`. Extract each goal's title, priority, status, and **Success Criteria** checkboxes. Only consider goals with `Status: Approved`.
 2. **Requirements** — read every `REQ-*.md` file in `1-spec/requirements/`. Note their type (Functional, Performance, Security, etc.), status, priority, and linked goals/stories. Planning targets requirements with `Status: Approved`; `Deprecated` ones are excluded, and `Implemented` ones need no new tasks unless the user asks. **If any requirement is still `Draft`, stop and surface the list to the user before any analysis**: recommend approving them first (reviewing them via `/SDLC-elicit`), and offer the alternative of overriding the check and planning with the Draft requirements included. Proceed only after the user chooses.
 3. **Constraints** — read every `CON-*.md` file in `1-spec/constraints/`.
-4. **Design documents** — read every document listed in the Design Documents Index in `2-design/CLAUDE.design.md`.
+4. **Design documents** — read every document listed in the Design Documents Index in `2-design/AGENTS.design.md`.
 5. **Decisions** — read every `DEC-*.md` file in `decisions/` (active records only, not `.history.md`).
-6. **Code phase instructions** — read `3-code/CLAUDE.code.md`.
-7. **Components** — read every component `CLAUDE.md` in `3-code/*/`.
-8. **Deploy phase instructions** — read `4-deploy/CLAUDE.deploy.md`.
+6. **Code phase instructions** — read `3-code/AGENTS.code.md`.
+7. **Components** — read every component `AGENTS.md` in `3-code/*/`.
+8. **Deploy phase instructions** — read `4-deploy/AGENTS.deploy.md`.
 
 ### Analysis
 
@@ -50,7 +50,7 @@ Before constructing the plan, perform these analyses silently (do not output the
 
 #### 1. Requirement-to-Component Map
 
-For each requirement, identify which component(s) must implement it (from the component `CLAUDE.md` files). Requirements that span multiple components need tasks in each.
+For each requirement, identify which component(s) must implement it (from the component `AGENTS.md` files). Requirements that span multiple components need tasks in each.
 
 #### 2. Dependency Graph
 
@@ -120,9 +120,9 @@ If `4-deploy/` expectations exist, include infrastructure-as-code tasks (Terrafo
 
 Every phase must end with a **manual testing readiness task** (`TASK-phase-N-manual-testing`) that ensures a tester can verify the delivered capabilities without reading source code. The task should:
 
-1. **Create or update a deploy runbook** in `4-deploy/runbooks/` with startup instructions and step-by-step manual test scenarios for the phase's new capabilities. Update existing runbooks rather than creating duplicates, and keep the Runbooks Index in `4-deploy/CLAUDE.deploy.md` in sync.
+1. **Create or update a deploy runbook** in `4-deploy/runbooks/` with startup instructions and step-by-step manual test scenarios for the phase's new capabilities. Update existing runbooks rather than creating duplicates, and keep the Runbooks Index in `4-deploy/AGENTS.deploy.md` in sync.
 2. **Document build/run/test commands** in the README (or equivalent existing doc) of every component modified in this phase or previous phases (e.g., `3-code/<component>/README.md`). Create or update convenience scripts where useful; for single-command operations, documenting the command is sufficient.
-3. **Record manual verification**: when a runbook scenario verifies a requirement or acceptance criterion — in particular criteria that earlier tasks in the phase deferred to manual verification (check those tasks' implementation logs for deferral notes) — add the corresponding `manual` rows to the global verification index (`3-code/verification.md`), following the Testing Conventions in `3-code/CLAUDE.code.md`.
+3. **Record manual verification**: when a runbook scenario verifies a requirement or acceptance criterion — in particular criteria that earlier tasks in the phase deferred to manual verification (check those tasks' implementation logs for deferral notes) — add the corresponding `manual` rows to the global verification index (`3-code/verification.md`), following the Testing Conventions in `3-code/AGENTS.code.md`.
 
 The Component column must list all components involved in the current phase and previous phases. Place these tasks in the `### Deploy & Operations` task table section, dependent on the phase's last functional task, with `-` in the Req column. List them last in the Execution Plan for their phase.
 
@@ -212,7 +212,7 @@ For each task, create a row:
 
 #### 3. Update Current State
 
-After writing tasks, update the `### Current State` subsection in `CLAUDE.md` following the Current State Protocol defined there:
+After writing tasks, update the `### Current State` subsection in `AGENTS.md` following the Current State Protocol defined there:
 
 - Add (or update) the `**Implementation plan**:` line, e.g., `**Implementation plan**: created 2026-03-12 — N phases, M tasks`.
 - Add (or reset) the `**Task progress**:` line, e.g., `**Task progress**: 0/M tasks done — currently in Phase 1 (<name>)`.

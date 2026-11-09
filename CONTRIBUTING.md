@@ -26,4 +26,4 @@ as the project (**Apache-2.0**).
 Releases follow Semantic Versioning and are cut with the `/SDLC-release` skill, which finalizes
 the changelog entry, updates the version in the `FRAMEWORK.md` header, creates the
 release commit, and provides the tagging instructions (`vX.Y.Z`). See
-`.claude/skills/SDLC-release/SKILL.md` for the version-bump semantics and the full procedure.
+`.agents/skills/SDLC-release/SKILL.md` for the version-bump semantics and the full procedure.

@@ -9,7 +9,7 @@ You are running an interactive elicitation session for the Specification phase o
 
 ### Phase Validation
 
-Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `CLAUDE.md`. Then follow the matching case below:
+Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `AGENTS.md`. Then follow the matching case below:
 
 1. **`Not initialized`** — **Stop**, recommend `/SDLC-init`, and do not proceed.
 
@@ -19,9 +19,9 @@ Before doing anything else, read the `**Phase**:` field of the `### Current Stat
 
 ### Setup
 
-1. Read `1-spec/CLAUDE.spec.md` (phase instructions and existing artifact indexes).
+1. Read `1-spec/AGENTS.spec.md` (phase instructions and existing artifact indexes).
 2. Read `1-spec/stakeholders.md` to understand existing stakeholders.
-3. Check the `## Decisions Relevant to This Phase` index in `1-spec/CLAUDE.spec.md`: read any decisions whose trigger conditions apply, and apply their enforcement rules throughout the elicitation session.
+3. Check the `## Decisions Relevant to This Phase` index in `1-spec/AGENTS.spec.md`: read any decisions whose trigger conditions apply, and apply their enforcement rules throughout the elicitation session.
 
 ### Artifact Traceability Chain
 
@@ -71,7 +71,7 @@ Present suggestions as options the user can accept, modify, or decline. Do not c
 When drafting a requirement to propose to the user, check it against these criteria before presenting it:
 
 - **Verifiable** — every acceptance criterion must be measurable or testable. Flag vague language (e.g., "fast", "user-friendly", "secure") and suggest a concrete threshold or test condition.
-- **Addressable** — every acceptance criterion carries its stable ID from the first draft (`**AC-kebab-name**:`, unique within the requirement, naming the scenario — naming rules in `CLAUDE.md`).
+- **Addressable** — every acceptance criterion carries its stable ID from the first draft (`**AC-kebab-name**:`, unique within the requirement, naming the scenario — naming rules in `AGENTS.md`).
 - **Unambiguous** — there should be only one reasonable interpretation. Flag terms that different stakeholders could read differently (e.g., "large file", "real-time", "most users").
 - **Consistent** — the requirement must not conflict with any existing requirement or constraint. Check against the current artifact set and flag contradictions.
 - **Feasible** — if known constraints make the requirement unrealistic, flag the tension (e.g., a latency target that conflicts with a mandated third-party API).
@@ -107,7 +107,7 @@ This skill can analyze the current set of Specification artifacts to identify ga
 
 #### 1. Goal Coverage Assessment
 
-Read the `## Project Overview` section in `CLAUDE.md` and compare the stated project objective against the current set of approved and draft goals. Determine whether:
+Read the `## Project Overview` section in `AGENTS.md` and compare the stated project objective against the current set of approved and draft goals. Determine whether:
 
 - The goals **collectively cover** the project objective — every major capability or outcome described in the overview is addressed by at least one goal.
 - There are **aspects of the project objective not covered** by any goal — flag these as missing goals.
@@ -150,11 +150,11 @@ After completing the gap analysis with no Critical findings remaining, inform th
 - When the user confirms, create the file(s) from the appropriate template.
 - **After completing an approved action or after the user declines a proposal, briefly summarize what was done, then ask the user how they want to proceed.** Do not jump directly into suggesting new artifacts.
 - When the user asks for suggestions or is unsure what to do next, use the Proactive Suggestions guidelines above to offer relevant options.
-- Surface potential conflicts between requirements immediately — follow the conflict resolution procedure in `CLAUDE.spec.md`.
+- Surface potential conflicts between requirements immediately — follow the conflict resolution procedure in `AGENTS.spec.md`.
 
 ### Current State Tracking
 
-Whenever the skill applies user-approved changes (creating, modifying, or deleting artifacts), update the `### Current State` subsection in `CLAUDE.md` following the Current State Protocol defined there:
+Whenever the skill applies user-approved changes (creating, modifying, or deleting artifacts), update the `### Current State` subsection in `AGENTS.md` following the Current State Protocol defined there:
 
 1. **`**Spec artifacts**:` line** — list which artifact types have been worked on in the Specification phase (e.g., `**Spec artifacts**: Stakeholders defined; Goals and Assumptions drafted`). Update it incrementally as new types are touched.
 2. **`**Gap analysis**:` line** — when a gap analysis is run, (over)write the line in active form (see Assessment lines in the Current State Protocol), with today's date and the compact list of open issues (e.g., `**Gap analysis**: 2026-03-08 — fresh — open: Critical: GOAL-reporting has no user stories; Important: CON-gdpr has no derived requirement`, or `… — fresh — no issues` when the run found none).
@@ -164,8 +164,8 @@ Gap analysis can be run at any time during elicitation — it is useful as a mid
 
 ### Rules
 
-- **Current State synchronization**: whenever artifacts are created, modified, or deleted, update `### Current State` in `CLAUDE.md` as described in the Current State Tracking section above. This update must happen in the same operation as the artifact change.
-- **Index synchronization**: whenever an artifact file is created, modified, or deleted, update the corresponding index table in `1-spec/CLAUDE.spec.md` in the same operation. For new artifacts, add a row with all metadata columns (file link, status, priority, summary, etc.); for modifications, update the row to reflect the current metadata; for deletions, remove the row. The link columns (Stakeholder for goals, Goal for user stories, Source for requirements) must always be filled — they are what the traceability scans read.
+- **Current State synchronization**: whenever artifacts are created, modified, or deleted, update `### Current State` in `AGENTS.md` as described in the Current State Tracking section above. This update must happen in the same operation as the artifact change.
+- **Index synchronization**: whenever an artifact file is created, modified, or deleted, update the corresponding index table in `1-spec/AGENTS.spec.md` in the same operation. For new artifacts, add a row with all metadata columns (file link, status, priority, summary, etc.); for modifications, update the row to reflect the current metadata; for deletions, remove the row. The link columns (Stakeholder for goals, Goal for user stories, Source for requirements) must always be filled — they are what the traceability scans read.
 - All new artifacts start with `Status: Draft`. Never auto-approve — only the user can move an artifact to `Approved`; when they do, record the transition date (`Approved (YYYY-MM-DD)`).
 - Modified `Approved` artifacts revert to `Draft` (see Status Downgrade above).
 - Choose a short descriptive kebab-case name for each new artifact (check existing files to avoid duplicates). The name **is** the ID — there are no numeric sequences.

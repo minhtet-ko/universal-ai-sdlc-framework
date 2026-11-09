@@ -9,11 +9,11 @@ You are working in the Design phase, creating or updating architecture, data mod
 
 ### Phase Validation
 
-Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `CLAUDE.md`. Then follow the matching case below:
+Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `AGENTS.md`. Then follow the matching case below:
 
 1. **`Not initialized`** — **Stop**, recommend `/SDLC-init`, and do not proceed.
 
-2. **`Specification`** — design work would cross the Spec → Design phase gate. Recommend running `/SDLC-validate` first: gate evaluation trusts the assessment lines in Current State, and validation verifies their freshness against the actual git history. Then evaluate all three Spec → Design preconditions from the Phase Gates table in `CLAUDE.md` (using its "How to verify" column), and respond based on the results:
+2. **`Specification`** — design work would cross the Spec → Design phase gate. Recommend running `/SDLC-validate` first: gate evaluation trusts the assessment lines in Current State, and validation verifies their freshness against the actual git history. Then evaluate all three Spec → Design preconditions from the Phase Gates table in `AGENTS.md` (using its "How to verify" column), and respond based on the results:
 
    - **If any artifact precondition is not met** (stakeholders defined, at least one requirement Approved) — elicitation is incomplete. **Stop**, list what is missing, recommend `/SDLC-elicit`, and do not proceed.
    - **If the artifact preconditions are met but the gap-analysis precondition is not** (no gap analysis, stale, or open Critical issues) — **strongly recommend** running a gap analysis via `/SDLC-elicit` before design. Proceed only if the user explicitly accepts the gaps.
@@ -27,7 +27,7 @@ Before doing anything else, read the `**Phase**:` field of the `### Current Stat
 
 ### Setup
 
-1. Read `2-design/CLAUDE.design.md` (phase instructions and decisions index).
+1. Read `2-design/AGENTS.design.md` (phase instructions and decisions index).
 2. Read any decisions whose trigger conditions apply.
 
 ### Design Principle
@@ -40,12 +40,12 @@ The goal of this phase is to produce the **simplest design that makes every appr
 
 Before doing anything else, determine what already exists:
 
-- Read the Design Documents Index in `2-design/CLAUDE.design.md` and the documents it lists to understand what design work has been done.
+- Read the Design Documents Index in `2-design/AGENTS.design.md` and the documents it lists to understand what design work has been done.
 - Summarize the current design state to the user: which documents are listed, their statuses, and what the logical next step is (including selecting the design surface, if not yet done).
 
 #### 2. Load Specification Artifacts
 
-Read **only the index tables** in `1-spec/CLAUDE.spec.md` — do **not** open individual artifact files yet. Use the summary column in each index to determine relevance:
+Read **only the index tables** in `1-spec/AGENTS.spec.md` — do **not** open individual artifact files yet. Use the summary column in each index to determine relevance:
 
 - **Requirements Index** — identify which requirements apply to the current design work.
 - **Goals Index** — identify which goals the design must satisfy.
@@ -59,7 +59,7 @@ Read **only the index tables** in `1-spec/CLAUDE.spec.md` — do **not** open in
 
 #### 3. Select the Design Surface
 
-If the Design Documents Index in `2-design/CLAUDE.design.md` lists only `architecture.md`, the design surface has not been selected yet: propose the additional documents this project needs, inferred from the project description, requirements, and constraints. Suggestions by project characteristics (indicative, not exhaustive):
+If the Design Documents Index in `2-design/AGENTS.design.md` lists only `architecture.md`, the design surface has not been selected yet: propose the additional documents this project needs, inferred from the project description, requirements, and constraints. Suggestions by project characteristics (indicative, not exhaustive):
 
 | Project characteristics | Suggested documents |
 |-------------------------|---------------------|
@@ -130,7 +130,7 @@ This skill can assess the overall readiness of the design phase. When the user r
 
 #### 1. Document Completeness
 
-For each document in the Design Documents Index: `Stub` means selected but not yet drafted; for `Draft` and `Approved` documents, assess whether they cover the scope implied by the architecture (e.g., if the architecture defines three components, does the interface design cover all three?). Also assess whether the selected set still fits the project — a requirement implying a design concern with no corresponding document is a gap — and whether any document has outgrown its high-level scope and should be split into sub-documents (see Document Granularity in `2-design/CLAUDE.design.md`).
+For each document in the Design Documents Index: `Stub` means selected but not yet drafted; for `Draft` and `Approved` documents, assess whether they cover the scope implied by the architecture (e.g., if the architecture defines three components, does the interface design cover all three?). Also assess whether the selected set still fits the project — a requirement implying a design concern with no corresponding document is a gap — and whether any document has outgrown its high-level scope and should be split into sub-documents (see Document Granularity in `2-design/AGENTS.design.md`).
 
 #### 2. Requirement Coverage
 
@@ -204,7 +204,7 @@ Present suggestions as options the user can accept, modify, or decline. Do not a
 
 ### Current State Tracking
 
-Whenever the skill applies user-approved changes (creating or updating design documents, recording decisions), update the `### Current State` subsection in `CLAUDE.md` following the Current State Protocol defined there:
+Whenever the skill applies user-approved changes (creating or updating design documents, recording decisions), update the `### Current State` subsection in `AGENTS.md` following the Current State Protocol defined there:
 
 1. **Phase transition** — when the first user-approved design change is applied (transitioning from Specification to Design, advancement already confirmed by the user during Phase Validation): set `**Phase**: Design`, rewrite `**Summary**:` as a fresh Design-phase summary, and convert `**Gap analysis**:` to its passed form, recording how the gate was passed (protocol rule 3).
 2. **`**Design documents**:` line** — list which design documents have content and which are still empty or incomplete (e.g., `**Design documents**: architecture drafted; data model and API design pending`). Update it incrementally as documents are created or modified.
@@ -212,7 +212,7 @@ Whenever the skill applies user-approved changes (creating or updating design do
 
 ### Rules
 
-- **Current State synchronization**: whenever design documents are created, updated, or decisions are recorded, update `### Current State` in `CLAUDE.md` as described in the Current State Tracking section above. This update must happen in the same operation as the design change.
+- **Current State synchronization**: whenever design documents are created, updated, or decisions are recorded, update `### Current State` in `AGENTS.md` as described in the Current State Tracking section above. This update must happen in the same operation as the design change.
 - Always reference requirements by ID (e.g., `REQ-F-search-by-name`) for traceability.
 - Use Mermaid diagrams where they add clarity.
 - If a requirement is ambiguous or contradictory, surface it — do not resolve silently.

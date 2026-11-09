@@ -9,10 +9,10 @@ You are running a read-only consistency validation over the repository's SDLC ar
 
 ### Setup
 
-1. Read `CLAUDE.md` — the Current State Protocol, the `### Current State` content, the Phase Gates table, and the artifact naming rules — and `FRAMEWORK.md` (the framework/project boundary manifest). These are the authorities the checks verify against; do not invent stricter rules than documented.
-2. Read `1-spec/CLAUDE.spec.md` (index tables, status lifecycles), `2-design/CLAUDE.design.md`, `3-code/CLAUDE.code.md`, and `4-deploy/CLAUDE.deploy.md`.
+1. Read `AGENTS.md` — the Current State Protocol, the `### Current State` content, the Phase Gates table, and the artifact naming rules — and `FRAMEWORK.md` (the framework/project boundary manifest). These are the authorities the checks verify against; do not invent stricter rules than documented.
+2. Read `1-spec/AGENTS.spec.md` (index tables, status lifecycles), `2-design/AGENTS.design.md`, `3-code/AGENTS.code.md`, and `4-deploy/AGENTS.deploy.md`.
 3. Read `1-spec/stakeholders.md`.
-4. List artifact files, excluding `_template*.md` files: `1-spec/goals/`, `1-spec/user-stories/`, `1-spec/requirements/`, `1-spec/assumptions/`, `1-spec/constraints/`, `2-design/*.md` (excluding `CLAUDE.design.md`), `decisions/` (also excluding `PROCEDURES.md`), `3-code/*/CLAUDE.md` (component directories), `3-code/tasks.md`, `3-code/verification.md` and `3-code/*/verification.md` (verification indexes), `3-code/implementation-log/`, `4-deploy/runbooks/`.
+4. List artifact files, excluding `_template*.md` files: `1-spec/goals/`, `1-spec/user-stories/`, `1-spec/requirements/`, `1-spec/assumptions/`, `1-spec/constraints/`, `2-design/*.md` (excluding `AGENTS.design.md`), `decisions/` (also excluding `PROCEDURES.md`), `3-code/*/AGENTS.md` (component directories), `3-code/tasks.md`, `3-code/verification.md` and `3-code/*/verification.md` (verification indexes), `3-code/implementation-log/`, `4-deploy/runbooks/`.
 5. Open artifact files as required by the checks below.
 
 ### Checks
@@ -30,7 +30,7 @@ Run every check whose subject exists; skip checks whose subject does not exist y
 - Every artifact-to-artifact reference resolves to an existing file: `Source`, `Source stakeholder`, `Related goal`, Derived Requirements, Related Artifacts sections.
 - Referenced stakeholder IDs exist as rows in `stakeholders.md`.
 - `tasks.md`: Req column links resolve to requirement files; Dependencies reference existing task IDs.
-- Component `CLAUDE.md` files: rows in `## Requirements Addressed` and `## Relevant Decisions` resolve.
+- Component `AGENTS.md` files: rows in `## Requirements Addressed` and `## Relevant Decisions` resolve.
 
 #### 3. IDs and naming
 
@@ -40,12 +40,12 @@ Run every check whose subject exists; skip checks whose subject does not exist y
 
 #### 4. Status legality and coherence
 
-- Every Status value belongs to its artifact's lifecycle vocabulary (per `1-spec/CLAUDE.spec.md`, the decision template, and the `tasks.md` legends). An optional transition-date suffix (`(YYYY-MM-DD)`) is legal and ignored when matching status names.
+- Every Status value belongs to its artifact's lifecycle vocabulary (per `1-spec/AGENTS.spec.md`, the decision template, and the `tasks.md` legends). An optional transition-date suffix (`(YYYY-MM-DD)`) is legal and ignored when matching status names.
 - Requirement `Implemented` ⇔ all its linked tasks are `Done` (ignoring `Cancelled` and `Decomposed`, at least one `Done`). Both directions are findings: `Implemented` with pending tasks is an illegal state; `Approved` with all tasks `Done` is a missed propagation (see `/SDLC-execute-task`).
 - User story `Implemented` ⇒ all its derived requirements are `Implemented`. Goal `Achieved` ⇒ all its Success Criteria checkboxes are ticked.
 - Task `Blocked`, `Cancelled`, or `Decomposed` ⇒ Notes column non-empty (for `Decomposed`, listing the subtask IDs).
 - At most one task `In Progress` — more than one indicates interrupted runs that were never reconciled.
-- Design documents: the `**Status**:` field matches the vocabulary defined in `2-design/CLAUDE.design.md`; `Stub` documents carry no substantive content, while `Draft`/`Approved` documents do.
+- Design documents: the `**Status**:` field matches the vocabulary defined in `2-design/AGENTS.design.md`; `Stub` documents carry no substantive content, while `Draft`/`Approved` documents do.
 
 #### 5. Traceability orphans
 
@@ -56,7 +56,7 @@ Run every check whose subject exists; skip checks whose subject does not exist y
 #### 6. Current State accuracy
 
 - `**Phase**:` holds a legal value; the mandatory lines exist; status lines follow the protocol formats.
-- `**Components**:` matches the directories in `3-code/` that contain a `CLAUDE.md`.
+- `**Components**:` matches the directories in `3-code/` that contain a `AGENTS.md`.
 - `**Implementation plan**:` and `**Task progress**:` counts match `tasks.md` (totals, Done count, current phase).
 - **Assessment freshness (git-verified)** — for each assessment line in active form claiming `fresh`, compare its date against the last actual change:
   - Gap analysis: `git log -1 --format=%cs -- 1-spec/` and `git status --porcelain -- 1-spec/` (uncommitted changes count as changes).
@@ -74,7 +74,7 @@ Run every check whose subject exists; skip checks whose subject does not exist y
 
 #### 9. Requirement ↔ test verification
 
-Subjects: the verification indexes (`3-code/verification.md`, `3-code/<component>/verification.md`) and the `Verifies:` markers in component sources — locate the markers with `git grep -n "Verifies:" -- 3-code/`, complemented by a plain grep over untracked files reported by `git status` under `3-code/`. Ignore matches outside component directories' source trees: the phase file (`CLAUDE.code.md`), the verification indexes themselves, and the implementation logs quote the marker syntax without being markers. The conventions being verified are defined in the Testing Conventions section of `3-code/CLAUDE.code.md`.
+Subjects: the verification indexes (`3-code/verification.md`, `3-code/<component>/verification.md`) and the `Verifies:` markers in component sources — locate the markers with `git grep -n "Verifies:" -- 3-code/`, complemented by a plain grep over untracked files reported by `git status` under `3-code/`. Ignore matches outside component directories' source trees: the phase file (`AGENTS.code.md`), the verification indexes themselves, and the implementation logs quote the marker syntax without being markers. The conventions being verified are defined in the Testing Conventions section of `3-code/AGENTS.code.md`.
 
 - **Marker resolution**: every reference after a `Verifies:` keyword resolves — the requirement ID to an existing file in `1-spec/requirements/`, the optional `/AC-kebab-name` suffix to an acceptance criterion declared in that file. A `Verifies:` line containing no parseable `REQ-` reference is a malformed marker.
 - **Marker ↔ index synchronization**: every marker reference has a matching row (same requirement, AC, test) in the owning component's verification index, and every automated row (`unit`/`integration`/`e2e`) points to an existing test file containing the corresponding marker. Manual rows: the runbook link resolves and the named scenario exists in the runbook.
@@ -101,4 +101,4 @@ Subjects: the verification indexes (`3-code/verification.md`, `3-code/<component
 - **Read-only operation** — never modify any file. Do not flip staleness markers, fix index rows, or correct links yourself; report and recommend.
 - **Git is read-only too** — use only inspecting commands (`git log`, `git status`, `git diff --name-only`).
 - **Skip gracefully** — artifacts a project has not reached yet are skips, not findings.
-- **Authorities over intuition** — validate against what `CLAUDE.md`, the phase files, and the templates actually specify; if a rule is ambiguous, report the ambiguity instead of enforcing an interpretation.
+- **Authorities over intuition** — validate against what `AGENTS.md`, the phase files, and the templates actually specify; if a rule is ambiguous, report the ambiguity instead of enforcing an interpretation.
