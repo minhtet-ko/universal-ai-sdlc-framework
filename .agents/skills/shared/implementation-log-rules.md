@@ -17,6 +17,7 @@ The goal is to preserve the **important operations** and the **important evaluat
 - **Every design gap** surfaced via the Design Gap Procedure as a `[DESIGN-GAP]` entry — include the resolution (design-document update, new decision, deviation accepted, etc.).
 - **Every tension between authoritative sources** surfaced to the user as a `[TENSION]` entry — include the resolution.
 - **Test-run outcomes worth preserving** (failures with root cause, debug iterations, the final green run) as `[TEST]` entries.
+- **Every change of actor** (a different person after an agreed handover, or the same person with a different AI agent) as a `[HANDOFF]` entry naming the previous and the new actor — appended before any other entry of the run (see `multi-agent-collaboration.md`, §6).
 - **Any other important observation or evaluation** as a `[NOTE]` entry.
 
 **Do not log:**

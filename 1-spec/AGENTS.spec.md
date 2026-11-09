@@ -1,4 +1,4 @@
-Phase-specific instructions for the **Specification** phase. Extends [../CLAUDE.md](../CLAUDE.md).
+Phase-specific instructions for the **Specification** phase. Extends [../AGENTS.md](../AGENTS.md).
 
 ## Purpose
 
@@ -31,7 +31,7 @@ Status lifecycle: `Draft → Approved → Achieved → Deprecated`. Only the use
 **User Stories**: use "As a [role], I want [capability], so that [benefit]." The role is a plain role name (not an STK id); it must be traceable to existing stakeholders via the `Source stakeholder` field (one or more STK ids), with no fixed cardinality in either direction. Acceptance criteria at the story level are high-level; detailed criteria live in requirements.
 Status lifecycle: `Draft → Approved → Implemented → Deprecated`. Only the user can approve or deprecate. The agent marks `Implemented` when all linked requirements reach `Implemented` (automated by the status-propagation step of `/SDLC-execute-task`).
 
-**Requirements**: use clear, testable language (not "should be fast" — use "response time < 200ms at p95"). Choose the correct requirement class. Acceptance criteria carry stable `AC-kebab-name` IDs — naming rules in `CLAUDE.md`, change impact in the status-downgrade procedure of `/SDLC-elicit`.
+**Requirements**: use clear, testable language (not "should be fast" — use "response time < 200ms at p95"). Choose the correct requirement class. Acceptance criteria carry stable `AC-kebab-name` IDs — naming rules in `AGENTS.md`, change impact in the status-downgrade procedure of `/SDLC-elicit`.
 Requirement classes: `REQ-F` Functional, `REQ-PERF` Performance, `REQ-SEC` Security, `REQ-REL` Reliability, `REQ-USA` Usability, `REQ-MNT` Maintainability, `REQ-PORT` Portability, `REQ-SCA` Scalability, `REQ-COMP` Compliance.
 Status lifecycle: `Draft → Approved → Implemented → Deprecated`. Only the user can approve or deprecate. The agent marks `Implemented` when all linked tasks reach Done (automated by the status-propagation step of `/SDLC-execute-task`).
 
@@ -86,7 +86,7 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 
 - Goals, user stories, constraints, assumptions, and requirements are referenced in design documents (`2-design/`)
 - Requirements determine the development tasks in `3-code/tasks.md`; each task references the requirements it fulfills
-- Acceptance criteria are verified by tests: tests reference them by `REQ-CLASS-name/AC-name` address, and the mapping is recorded in the verification indexes (see Testing Conventions in `3-code/CLAUDE.code.md`)
+- Acceptance criteria are verified by tests: tests reference them by `REQ-CLASS-name/AC-name` address, and the mapping is recorded in the verification indexes (see Testing Conventions in `3-code/AGENTS.code.md`)
 
 ---
 

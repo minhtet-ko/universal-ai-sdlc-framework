@@ -1,6 +1,6 @@
 # Verification Index (global)
 
-Maps requirements and acceptance criteria to verification not owned by a single component: **manual runbook scenarios** and **cross-component checks**. Automated tests that live in a component are recorded in that component's own `verification.md` instead. Structure and maintenance rules: see Testing Conventions in [`CLAUDE.code.md`](CLAUDE.code.md).
+Maps requirements and acceptance criteria to verification not owned by a single component: **manual runbook scenarios** and **cross-component checks**. Automated tests that live in a component are recorded in that component's own `verification.md` instead. Structure and maintenance rules: see Testing Conventions in [`AGENTS.code.md`](AGENTS.code.md).
 
 | Requirement | AC | Test | Kind | Added |
 |-------------|----|------|------|-------|

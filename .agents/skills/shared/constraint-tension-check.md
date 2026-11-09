@@ -2,7 +2,7 @@
 
 _Included by `SDLC-execute-task` and `SDLC-fix`. Read when the including skill directs here._
 
-First, load the active constraints: read the Constraints Index in `1-spec/CLAUDE.spec.md` and open any constraint whose summary is plausibly relevant to the work at hand (technology, performance, security, compliance, hosting, timeline, …) — tensions cannot be detected against constraints that were never read.
+First, load the active constraints: read the Constraints Index in `1-spec/AGENTS.spec.md` and open any constraint whose summary is plausibly relevant to the work at hand (technology, performance, security, compliance, hosting, timeline, …) — tensions cannot be detected against constraints that were never read.
 
 Then, with all gathered context (the elicited problem or task scope, requirements, design documents, decisions, constraints, phase instructions), actively look for **tensions between authoritative sources**. A tension exists when two or more sources that the agent must follow pull in incompatible directions — satisfying one fully would require violating or bending another.
 

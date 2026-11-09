@@ -2,7 +2,7 @@
 
 ## What Is *AI SDLC Framework*
 
-A process framework for **AI-first software development** with [Claude Code](https://claude.ai/code). It provides a folder structure, file templates, and AI agent instructions that encode a complete software development lifecycle (SDLC) where all project knowledge lives inside the repository itself.
+A process framework for **AI-first software development** with any AI coding agent — Claude Code, OpenAI Codex, Gemini CLI, and others. (This is the Universal fork of [pangon/ai-sdlc-framework](https://github.com/pangon/ai-sdlc-framework); its rationale for tool neutrality and team collaboration is in the section "Multi-Agent Teams" below.) It provides a folder structure, file templates, and AI agent instructions that encode a complete software development lifecycle (SDLC) where all project knowledge lives inside the repository itself.
 
 It is not a tool, a library, or an application — there is nothing to install or import. By nature it is a **process framework**: a persistent set of instructions, procedures, and automation that governs how the project is developed for its whole life, with agents operating inside its rules rather than merely starting from its files. By distribution it is template-like: you adopt it by copying it into your repository, then fill in the structure as your real project takes shape.
 
@@ -31,9 +31,9 @@ The framework makes the full project rationale — from business goals to deploy
 
 The framework's AI guidance is split into three complementary layers:
 
-**Instruction files** (`CLAUDE.md`, `CLAUDE.<phase>.md`) provide *context*. They describe the structure of the repository and its artifacts, maintain indexes for efficient navigation, and define safeguards and invariants that apply regardless of what task the agent is currently performing. They answer the question "what is here".
+**Instruction files** (`AGENTS.md`, `AGENTS.<phase>.md`) provide *context*. They describe the structure of the repository and its artifacts, maintain indexes for efficient navigation, and define safeguards and invariants that apply regardless of what task the agent is currently performing. They answer the question "what is here".
 
-**Skills** (`.claude/skills/SDLC-*/`) provide *operational procedures*. Each skill encodes the step-by-step "how" for a specific SDLC activity — eliciting requirements, drafting design documents, decomposing components, planning implementation, executing tasks, reporting status. Skills are loaded on demand when the agent performs that activity, keeping the always-loaded instruction files lean.
+**Skills** (`.agents/skills/SDLC-*/`) provide *operational procedures*. Each skill encodes the step-by-step "how" for a specific SDLC activity — eliciting requirements, drafting design documents, decomposing components, planning implementation, executing tasks, reporting status. Skills are loaded on demand when the agent performs that activity, keeping the always-loaded instruction files lean.
 
 **Project artifacts** are the structured markdown files that skills produce and maintain over the course of the project: stakeholders, goals, constraints, assumptions, user stories, requirements, decisions, architecture, data model, API design, tasks, and runbooks. These are the project-specific knowledge that accumulates as work progresses — the actual content that the instruction files index and the skills know how to use and manipulate. Together, they form the repository's memory of every choice made and why.
 
@@ -53,7 +53,7 @@ The project is divided into four sequential phases, each in its own directory:
 | **4-deploy** | Ship and operate it: infrastructure-as-code, deployment scripts, runbooks |
 
 Each phase has:
-- A `CLAUDE.<phase>.md` file with AI-specific instructions for that phase
+- A `AGENTS.<phase>.md` file with AI-specific instructions for that phase
 - Templates (`_template.md`) for creating new artifacts
 - Advisory phase gates defining minimum preconditions before advancing to the next phase
 
@@ -63,13 +63,13 @@ Each phase has:
 
 Several structural choices exist specifically to reduce token consumption:
 
-- **Hierarchical instructions** (`CLAUDE.md` → `CLAUDE.<phase>.md`): agents load only the global file and the relevant phase file, not all four phases at once.
+- **Hierarchical instructions** (`AGENTS.md` → `AGENTS.<phase>.md`): agents load only the global file and the relevant phase file, not all four phases at once.
 - **Two-file decision records**: the active record (`DEC-kebab-name.md`) contains only what an agent needs during normal work; the history (`DEC-kebab-name.history.md`) is loaded only when evaluating or changing a decision.
-- **Phase-level indexes with trigger conditions**: each `CLAUDE.<phase>.md` lists which decisions apply and when, so agents can skip irrelevant ones without opening them.
+- **Phase-level indexes with trigger conditions**: each `AGENTS.<phase>.md` lists which decisions apply and when, so agents can skip irrelevant ones without opening them.
 
 ### English as the Working Language
 
-All AI outputs — responses, reasoning, code, comments, documentation, configuration, commit messages — are produced in English regardless of the language used in prompts (the Language Policy in `CLAUDE.md`). Three motivations:
+All AI outputs — responses, reasoning, code, comments, documentation, configuration, commit messages — are produced in English regardless of the language used in prompts (the Language Policy in `AGENTS.md`). Three motivations:
 
 1. **Model performance.** LLMs are pretrained predominantly on English and measurably perform best in it. For smaller and earlier-generation models the gap is broad: [self-translating input to English consistently beats direct non-English inference](https://aclanthology.org/2024.naacl-short.46/), and mechanistic analysis shows that the internal "concept space" of English-dominated models [lies closest to English](https://arxiv.org/abs/2402.10588). On frontier models the knowledge gap for high-resource languages has nearly closed, but the reasoning gap persists: [English chain-of-thought outperforms target-language reasoning, with the gap widening on long multi-step tasks and not closing with model scale](https://arxiv.org/abs/2508.14828), and [rewarding language consistency in reasoning traces has a measured accuracy cost](https://arxiv.org/abs/2501.12948). An English-only pipeline avoids fighting the models' dominant language exactly where it matters most: reasoning and code.
 
@@ -105,7 +105,7 @@ The final link of the chain — requirements to tests — gets the same treatmen
 
 ### Framework/Project Boundary
 
-[`FRAMEWORK.md`](FRAMEWORK.md) declares which files belong to the framework (skills, templates, procedures, the instructional parts of the `CLAUDE.*` files) and which are project content, with modification and upgrade semantics per category. This makes explicit what distinguishes the framework from a one-shot template: its rules and automation remain present — and upgradable from upstream — for the project's whole life, instead of dissolving into the project at instantiation. The manifest, together with the framework version stamped in the same file, is the foundation for a future upgrade procedure.
+[`FRAMEWORK.md`](FRAMEWORK.md) declares which files belong to the framework (skills, templates, procedures, the instructional parts of the `AGENTS.*` files) and which are project content, with modification and upgrade semantics per category. This makes explicit what distinguishes the framework from a one-shot template: its rules and automation remain present — and upgradable from upstream — for the project's whole life, instead of dissolving into the project at instantiation. The manifest, together with the framework version stamped in the same file, is the foundation for a future upgrade procedure.
 
 ### Graduated Safeguards
 
@@ -130,7 +130,7 @@ All artifacts with a Status field follow a defined lifecycle with explicit trans
 
 ## What the Framework Provides Out of the Box
 
-- A layered AI instruction system (`CLAUDE.md` → `CLAUDE.<phase>.md`) with phase-level indexes and cross-skill artifact procedures
+- A layered AI instruction system (`AGENTS.md` → `AGENTS.<phase>.md`) with phase-level indexes and cross-skill artifact procedures
 - A declared framework/project boundary (`FRAMEWORK.md`) with per-category ownership and upgrade semantics
 - Automation skills across the lifecycle: project initialization, requirements elicitation, design drafting, component decomposition, implementation planning, task execution, bug fixing and ad-hoc changes, status reporting, and artifact consistency validation (deploy work has no dedicated skill — it flows through task execution and fixes, governed by the deploy phase instructions)
 - Decision management procedures (creation, deprecation, supersession)
@@ -140,3 +140,15 @@ All artifacts with a Status field follow a defined lifecycle with explicit trans
 - A task tracker linked to requirements
 - A mandatory architecture stub plus a template for the project-defined design documents (selected per project during design work)
 - A `.gitignore` with technology-agnostic defaults
+
+## Multi-Agent Teams
+
+_Added by the Universal fork._
+
+The upstream framework targets one agent tool and, implicitly, one agent working at a time. Real teams are rarely that uniform: people have different preferred tools, licenses, and models, and the strongest model for a task changes over time. Binding a process to one vendor makes the process as fragile as that vendor choice.
+
+- **The process is the product, not the tool.** The framework's value is in its procedures, written in plain language. Any capable agent can follow them, so the instructions are kept in tool-neutral files (`AGENTS.md`, `.agents/skills/`) and each tool gets a thin, generated adapter. Generating rather than copying keeps a single source of truth: no tool can drift into a different version of the process.
+- **Parallel work needs explicit ownership.** With several agents in flight, "the one `In Progress` task" stops being a reliable signal of interrupted work. Ownership (`<person> (<agent>)`) restores it: each person's agent reasons only about its own work in flight, and leaves teammates' work alone.
+- **Publish intent before effort.** The cheapest conflict is the one that never happens. A claim pushed before coding turns a costly duplicate implementation into an immediate, cheap "already taken".
+- **Merge by rule, not by luck.** Shared files (indexes, `tasks.md`, Current State) will conflict. Fixed rules (union of rows, recompute derived state, surface contradictions) make those merges deterministic for any agent.
+- **Diversity as a safeguard.** Different models make different mistakes. Recording which agent produced each change, and preferring a reviewer who uses a different agent than the author, turns tool diversity from a risk into a quality check.
