@@ -10,9 +10,11 @@ Thumbs.db
 .vscode/
 *.code-workspace
 
-# Claude Code — per-developer local settings (matched at any depth);
-# project-shared .claude/settings.json and .agents/skills/ stay tracked.
+# Agent tools — per-developer local settings (matched at any depth).
+# Shared, tracked: AGENTS.md, .agents/, generated adapters (CLAUDE.md, .claude/skills/,
+# .gemini/commands/), .claude/settings.json, .gemini/settings.json.
 **/.claude/settings.local.json
+**/.gemini/.env
 
 # Environment and secrets
 .env

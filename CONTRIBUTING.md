@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in contributing to **AI SDLC Framework**!
+Thanks for your interest in contributing to **Universal AI SDLC Framework**, a multi-agent fork of [AI SDLC Framework](https://github.com/pangon/ai-sdlc-framework)!
 
 ## License (inbound = outbound)
 This project is licensed under the Apache License 2.0 (see `LICENSE`).
@@ -21,6 +21,8 @@ as the project (**Apache-2.0**).
 - Prefer small PRs with clear descriptions.
 - Add/update documentation when behavior or workflow changes.
 - Add an entry to the `## [Unreleased]` section of `CHANGELOG.md` for any notable change.
+- Edit only the canonical sources (`AGENTS.md` files, `.agents/skills/`). After changing skills, run `.agents/bin/sync-adapters.sh` and commit the regenerated adapters; CI runs it with `--check`.
+- Keep skills tool-neutral: do not depend on features of one agent (sub-agents, plan mode, memory, special tools).
 
 ## Releasing (maintainers)
 Releases follow Semantic Versioning and are cut with the `/SDLC-release` skill, which finalizes

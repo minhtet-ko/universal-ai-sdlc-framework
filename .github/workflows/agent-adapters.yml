@@ -1,0 +1,21 @@
+name: Agent adapters
+
+# Fails when the generated per-tool adapters (CLAUDE.md shims, .claude/skills/,
+# .gemini/commands/) are out of sync with the canonical sources (AGENTS.md files,
+# .agents/skills/). Fix locally with: .agents/bin/sync-adapters.sh
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check adapters are in sync
+        run: bash .agents/bin/sync-adapters.sh --check

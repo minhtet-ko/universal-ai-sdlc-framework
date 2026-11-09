@@ -2,7 +2,7 @@
 
 ## What Is *AI SDLC Framework*
 
-A process framework for **AI-first software development** with [Claude Code](https://claude.ai/code). It provides a folder structure, file templates, and AI agent instructions that encode a complete software development lifecycle (SDLC) where all project knowledge lives inside the repository itself.
+A process framework for **AI-first software development** with any AI coding agent — Claude Code, OpenAI Codex, Gemini CLI, and others. (This is the Universal fork of [pangon/ai-sdlc-framework](https://github.com/pangon/ai-sdlc-framework); its rationale for tool neutrality and team collaboration is in the section "Multi-Agent Teams" below.) It provides a folder structure, file templates, and AI agent instructions that encode a complete software development lifecycle (SDLC) where all project knowledge lives inside the repository itself.
 
 It is not a tool, a library, or an application — there is nothing to install or import. By nature it is a **process framework**: a persistent set of instructions, procedures, and automation that governs how the project is developed for its whole life, with agents operating inside its rules rather than merely starting from its files. By distribution it is template-like: you adopt it by copying it into your repository, then fill in the structure as your real project takes shape.
 
@@ -140,3 +140,15 @@ All artifacts with a Status field follow a defined lifecycle with explicit trans
 - A task tracker linked to requirements
 - A mandatory architecture stub plus a template for the project-defined design documents (selected per project during design work)
 - A `.gitignore` with technology-agnostic defaults
+
+## Multi-Agent Teams
+
+_Added by the Universal fork._
+
+The upstream framework targets one agent tool and, implicitly, one agent working at a time. Real teams are rarely that uniform: people have different preferred tools, licenses, and models, and the strongest model for a task changes over time. Binding a process to one vendor makes the process as fragile as that vendor choice.
+
+- **The process is the product, not the tool.** The framework's value is in its procedures, written in plain language. Any capable agent can follow them, so the instructions are kept in tool-neutral files (`AGENTS.md`, `.agents/skills/`) and each tool gets a thin, generated adapter. Generating rather than copying keeps a single source of truth: no tool can drift into a different version of the process.
+- **Parallel work needs explicit ownership.** With several agents in flight, "the one `In Progress` task" stops being a reliable signal of interrupted work. Ownership (`<person> (<agent>)`) restores it: each person's agent reasons only about its own work in flight, and leaves teammates' work alone.
+- **Publish intent before effort.** The cheapest conflict is the one that never happens. A claim pushed before coding turns a costly duplicate implementation into an immediate, cheap "already taken".
+- **Merge by rule, not by luck.** Shared files (indexes, `tasks.md`, Current State) will conflict. Fixed rules (union of rows, recompute derived state, surface contradictions) make those merges deterministic for any agent.
+- **Diversity as a safeguard.** Different models make different mistakes. Recording which agent produced each change, and preferring a reviewer who uses a different agent than the author, turns tool diversity from a risk into a quality check.

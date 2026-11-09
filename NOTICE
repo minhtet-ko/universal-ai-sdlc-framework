@@ -7,3 +7,10 @@ You may obtain a copy of the License at
     http://www.apache.org/licenses/LICENSE-2.0
 
 Contributors are listed in CONTRIBUTORS.md and in the Git commit history.
+
+Universal AI SDLC Framework
+Modified work: multi-agent fork by minhtet-ko (2026-present).
+Changes from the original: instruction files renamed to tool-neutral AGENTS.md
+names, skills moved to .agents/skills/, per-tool adapters generated for
+Claude Code and Gemini CLI, and a multi-agent team collaboration procedure
+added. See CHANGELOG.md and the Git history for details.
