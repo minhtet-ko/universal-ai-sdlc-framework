@@ -1,0 +1,181 @@
+---
+name: SDLC-status
+description: Project-wide status dashboard across all SDLC phases. Use when the user wants an overview of the entire project state. Aggregates artifact counts, statuses, phase gate readiness, traceability health, and assessment freshness into a single report.
+---
+
+## Instructions
+
+You are generating a comprehensive status report for the entire SDLC project.
+
+### Setup
+
+1. Read root instructions: `CLAUDE.md` — extract Project Overview and Current State.
+2. Read all four phase instruction files:
+   - `1-spec/CLAUDE.spec.md`
+   - `2-design/CLAUDE.design.md`
+   - `3-code/CLAUDE.code.md`
+   - `4-deploy/CLAUDE.deploy.md`
+3. Read `1-spec/stakeholders.md`.
+4. Read `3-code/tasks.md` (if it exists and has content), and the verification indexes that exist — `3-code/verification.md` and `3-code/<component>/verification.md`.
+5. Scan all artifact indexes in the phase files — follow File column links only when needed to resolve ambiguous statuses.
+6. List files in `decisions/` to count decisions (exclude `PROCEDURES.md`, templates, and `.history.md` files; read `.history.md` only when the corresponding active record shows Deprecated or Superseded status).
+7. List component directories in `3-code/` (directories containing a `CLAUDE.md` file).
+8. List files in `4-deploy/infrastructure/`, `4-deploy/scripts/`, `4-deploy/runbooks/` to count deployment artifacts (exclude templates and placeholder `README.md` files).
+
+### Phase Validation
+
+Before generating the report, read the `**Phase**:` field of the `### Current State` subsection in `CLAUDE.md`:
+- If it is `Not initialized` (or the Project Overview still contains placeholder text) → report the project as **Not Initialized** and recommend `/SDLC-init`.
+- Otherwise → proceed with full report.
+
+### Report Structure
+
+Present the report as a single markdown document with these sections.
+
+---
+
+#### Project Overview
+- **Project**: name/description (from `CLAUDE.md` Project Overview)
+- **Date**: current date
+- **Current State**: reproduce the Current State section from `CLAUDE.md` verbatim — this is the authoritative project-level summary maintained by all skills
+
+---
+
+#### Phase 1: Specification
+
+**Stakeholders**: N defined (list names and influence levels in a compact line)
+
+**Artifacts**:
+
+| Artifact | Total | Draft | Approved | Implemented | Deprecated |
+|----------|-------|-------|----------|-------------|------------|
+| Goals | | | | | |
+| User Stories | | | | | |
+| Requirements | | | | | |
+
+| Artifact | Total | Unverified | Verified | Invalidated |
+|----------|-------|------------|----------|-------------|
+| Assumptions | | | | |
+
+| Artifact | Total | Active | Lifted |
+|----------|-------|--------|--------|
+| Constraints | | | |
+
+If requirements exist, add a **breakdown by class** (only classes that have at least one artifact):
+
+| Class | Total | Draft | Approved | Implemented |
+|-------|-------|-------|----------|-------------|
+| REQ-F | | | | |
+| REQ-SEC | | | | |
+| ... | | | | |
+
+**Gap Analysis**: report the `**Gap analysis**:` line from Current State — in active form: date, `fresh`/`stale` marker, and the open issues; in passed form: date and how the gate was passed. If the line is absent, state "Not performed".
+
+---
+
+#### Phase 2: Design
+
+**Documents**:
+
+| Document | Status |
+|----------|--------|
+| (one row per document in the Design Documents Index of `2-design/CLAUDE.design.md`) | (the document's `**Status**:` field) |
+
+Report each document's `**Status**:` field verbatim (including the approval date when present).
+
+**Decisions**: N active, N deprecated, N superseded
+
+**Completeness Assessment**: report the `**Completeness assessment**:` line from Current State — in active form: date, `fresh`/`stale` marker, and the open findings; in passed form: date and how the gate was passed. If the line is absent, state "Not performed".
+
+---
+
+#### Phase 3: Code
+
+**Components**: list identified components (from `3-code/` directories with a `CLAUDE.md` file), showing name and technology. If no components → state "Not decomposed yet".
+
+**Task Summary** (if `tasks.md` exists and has tasks):
+
+| Status | Count |
+|--------|-------|
+| Todo | |
+| In Progress | |
+| Blocked | |
+| Done | |
+| Decomposed | |
+| Cancelled | |
+| **Total** | |
+
+**Execution Plan Progress** (if execution plan exists in `tasks.md`):
+- Current phase: the earliest phase with incomplete tasks (not all Done/Cancelled/Decomposed)
+- Phase progress: for each phase, show `Done/Total` count and phase name
+- Overall: `N/M tasks done (X%)`
+
+**Requirements Coverage**: N of M approved requirements have at least one linked task (scan Req column in task table). List any approved requirements without tasks.
+
+---
+
+#### Phase 4: Deploy
+
+| Artifact Type | Count |
+|---------------|-------|
+| Infrastructure files | |
+| Scripts | |
+| Runbooks | |
+
+---
+
+#### Traceability Health
+
+Perform a lightweight traceability scan using the index link columns in `1-spec/CLAUDE.spec.md`, the Req column in `tasks.md`, and the verification indexes in `3-code/` (read index tables, not every file):
+
+- **Orphaned goals**: goals not referenced in any user story's Goal column
+- **Orphaned user stories**: user stories not referenced in any requirement's Source column
+- **Stakeholders without goals**: stakeholders not referenced in any goal's Stakeholder column
+- **Requirements without tasks**: approved requirements not referenced in any task's Req column
+- **Implemented requirements without tests**: `Implemented` requirements with no row in any verification index (AC-level completeness needs the requirement files — that is `/SDLC-validate`'s job, not this scan's)
+
+Report counts only. If all checks pass, state "No traceability issues detected". As an informational note (not an issue), list the requirement classes (of the 9 defined) with zero artifacts. For deep validation — link resolution, index↔file synchronization, status coherence, marker↔index synchronization, git-verified assessment freshness — recommend `/SDLC-validate`.
+
+---
+
+#### Phase Gates
+
+**Spec → Design**:
+| Precondition | Status |
+|--------------|--------|
+| Stakeholders defined | ✅ / ❌ |
+| At least one requirement Approved | ✅ / ❌ |
+| Gap analysis fresh, no open Critical issues | ✅ / ❌ / ⚠️ stale |
+
+**Design → Code**:
+| Precondition | Status |
+|--------------|--------|
+| All documents in the Design Documents Index drafted | ✅ / ❌ |
+| Completeness assessment fresh, no open Critical findings | ✅ / ❌ / ⚠️ stale |
+| Components identified (per-component directories in `3-code/`) | ✅ / ❌ |
+
+Use ✅ when met, ❌ when not met, ⚠️ when partially met or stale. A gate already crossed (assessment line in passed form) is ✅ — report its passed mode.
+
+---
+
+#### Suggested Next Actions
+
+Based on the current state, suggest **up to 5** concrete next actions ordered by impact. Tailor suggestions to the project's actual phase:
+
+- If not initialized → recommend `/SDLC-init`
+- If in Specification → recommend elicitation actions, gap analysis, approvals
+- If at Specification → Design gate → recommend resolving gate blockers
+- If in Design → recommend completing documents, recording decisions, running completeness assessment
+- If at Design → Code gate → recommend resolving gate blockers, running `/SDLC-decompose`
+- If in Code → recommend next task execution, resolving blocked tasks, addressing traceability gaps
+- If tasks complete → recommend deploy activities, final review
+
+Each suggestion should reference the specific skill or action (e.g., "Run `/SDLC-elicit` to perform gap analysis before advancing to Design").
+
+### Rules
+
+- **Read-only operation** — do not modify any files.
+- **Concise** — summary numbers and compact tables, not full artifact listings. The goal is a dashboard, not a dump.
+- **No phase is alarming if empty** — the project may simply not be at that phase yet. State it neutrally.
+- **Skip empty sections gracefully** — if a phase has no artifacts, show a single line (e.g., "No specification artifacts yet") instead of empty tables.
+- **Assessment freshness matters** — always report whether gap analysis and completeness assessments are fresh or stale, as this directly impacts phase gate readiness.

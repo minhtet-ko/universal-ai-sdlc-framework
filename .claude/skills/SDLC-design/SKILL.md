@@ -1,0 +1,218 @@
+---
+name: SDLC-design
+description: Draft or update design documents based on approved specification. Use when translating requirements into technical specifications. Covers the selection of the project's design-document set, the architecture, the other design documents, and the design completeness assessment.
+---
+
+## Instructions
+
+You are working in the Design phase, creating or updating architecture, data model, or API design documents.
+
+### Phase Validation
+
+Before doing anything else, read the `**Phase**:` field of the `### Current State` subsection in `CLAUDE.md`. Then follow the matching case below:
+
+1. **`Not initialized`** — **Stop**, recommend `/SDLC-init`, and do not proceed.
+
+2. **`Specification`** — design work would cross the Spec → Design phase gate. Recommend running `/SDLC-validate` first: gate evaluation trusts the assessment lines in Current State, and validation verifies their freshness against the actual git history. Then evaluate all three Spec → Design preconditions from the Phase Gates table in `CLAUDE.md` (using its "How to verify" column), and respond based on the results:
+
+   - **If any artifact precondition is not met** (stakeholders defined, at least one requirement Approved) — elicitation is incomplete. **Stop**, list what is missing, recommend `/SDLC-elicit`, and do not proceed.
+   - **If the artifact preconditions are met but the gap-analysis precondition is not** (no gap analysis, stale, or open Critical issues) — **strongly recommend** running a gap analysis via `/SDLC-elicit` before design. Proceed only if the user explicitly accepts the gaps.
+   - **If all preconditions are met** — inform the user of any remaining Important/Minor gaps (non-blocking) and **ask the user to confirm the advancement to the Design phase** (phase gate advancement is an "always ask" action). Proceed with Setup only after confirmation.
+
+   In every proceed case, the `**Phase**:` field is set to `Design` when the first user-approved design change is applied (see Current State Tracking) — not at validation time.
+
+3. **`Design`** — **proceed normally** with the Setup steps below.
+
+4. **`Code`** — the project has advanced beyond Design. **Warn** that modifying Design artifacts may impact downstream tasks or deployed code. If the user confirms, proceed but flag downstream dependencies that could be affected.
+
+### Setup
+
+1. Read `2-design/CLAUDE.design.md` (phase instructions and decisions index).
+2. Read any decisions whose trigger conditions apply.
+
+### Design Principle
+
+The goal of this phase is to produce the **simplest design that makes every approved requirement satisfiable**. Complexity is only justified when a simpler alternative fails to satisfy a requirement or violates a constraint. When in doubt, prefer fewer components, fewer abstractions, and more conventional technology choices. When requirements create design tension, prioritize Must-have requirements over Should-have — a design that simply satisfies all Must-haves and most Should-haves is preferable to a complex design that satisfies everything.
+
+### Workflow
+
+#### 1. Assess Current State
+
+Before doing anything else, determine what already exists:
+
+- Read the Design Documents Index in `2-design/CLAUDE.design.md` and the documents it lists to understand what design work has been done.
+- Summarize the current design state to the user: which documents are listed, their statuses, and what the logical next step is (including selecting the design surface, if not yet done).
+
+#### 2. Load Specification Artifacts
+
+Read **only the index tables** in `1-spec/CLAUDE.spec.md` — do **not** open individual artifact files yet. Use the summary column in each index to determine relevance:
+
+- **Requirements Index** — identify which requirements apply to the current design work.
+- **Goals Index** — identify which goals the design must satisfy.
+- **Constraints Index** — identify hard limits that affect design choices.
+- **Assumptions Index** — identify assumptions that inform feasibility and trade-offs.
+- **User Stories Index** — identify stories that provide user-facing context.
+
+**Then**, for each artifact whose summary indicates it is relevant to the design task at hand, read the individual file to get full details. Skip artifacts that are clearly unrelated — there is no need to read every file.
+
+**Flag draft artifacts**: if any requirements or user stories relevant to the current design work are still in `Draft` status, warn the user before proceeding. Draft artifacts may change, and designing against them introduces risk.
+
+#### 3. Select the Design Surface
+
+If the Design Documents Index in `2-design/CLAUDE.design.md` lists only `architecture.md`, the design surface has not been selected yet: propose the additional documents this project needs, inferred from the project description, requirements, and constraints. Suggestions by project characteristics (indicative, not exhaustive):
+
+| Project characteristics | Suggested documents |
+|-------------------------|---------------------|
+| Persistent or complex data | `data-model.md` |
+| Network/service interfaces | `api-design.md` |
+| Command-line surface | `command-interface.md` |
+| Significant user interface | `ux-design.md` (screens, UX flows, interaction patterns) |
+| Inter-process or inter-machine protocols | `protocol-design.md` |
+| Security-sensitive scope | `security-design.md` |
+| Games or content-heavy products | `game-systems.md`, `content-pipeline.md` |
+| ML models or training | `model-design.md`, `training-design.md`, `evaluation-design.md`, plus data documents |
+| Hardware interaction | `hardware-interfaces.md`, `resource-budgets.md` |
+
+Present the proposed set with a one-line purpose per document, and **wait for user approval** — the user may add, remove, or rename documents. After approval, create each document from `2-design/_template.md` (Status `Stub`) and add its row to the Design Documents Index.
+
+The set is not fixed forever: when later work reveals a missing concern, propose an addition; when a listed document turns out to be unnecessary, propose removing its row and deleting the file. Both are design changes requiring user confirmation.
+
+#### 4. Build the Simplest Satisfying Design
+
+Start from the architecture — it grounds everything else. At every step, apply the Design Principle: include only what is needed to satisfy approved requirements and respect constraints.
+
+**Architecture** (`2-design/architecture.md`, always first)
+- Define the system's components and their responsibilities.
+- Document component interactions using Mermaid diagrams.
+- Reference requirements by ID (e.g., `REQ-F-search-by-name`) for traceability.
+
+**Every other document in the Design Documents Index**, in dependency order (documents that others build on come first):
+- Cover only what is needed by approved requirements and the architecture — avoid speculative design for features not backed by requirements.
+- Follow the established conventions of the document's concern (e.g., REST or RPC conventions for network APIs, POSIX conventions for CLI surfaces, platform conventions for UX) or document deviations.
+- Define contracts precisely enough to implement against: formats, error handling, lifecycles, budgets — whatever "contract" means for the concern.
+- Align with the component responsibilities established in the architecture.
+
+The user does not have to complete all documents in a single session. Work on whichever document the current state of the design surface makes most urgent — the architecture first if not yet drafted.
+
+#### 5. Verify Requirement and Constraint Coverage
+
+Before presenting the draft, cross-reference the design against approved requirements **and** constraints:
+
+- For each approved requirement, confirm it is satisfiable by the proposed design.
+- For each constraint in `1-spec/constraints/`, confirm the design does not violate it. If a design choice is in tension with a constraint, surface the conflict and explain the trade-off.
+- For each assumption the design depends on, check its verification status. If unverified, note it as a design risk.
+- List any requirement that is not yet covered and explain why (e.g., depends on a document not yet drafted, requires a decision from the user).
+- If a Must-have requirement is not covered or a constraint is violated, the design is incomplete — address it before proceeding, or explicitly flag it as a gap that needs resolution.
+
+This verification applies to whatever document(s) are being drafted in the current session, not necessarily all three at once.
+
+#### 6. Present and Write
+
+- **Present the draft** to the user for review before writing. Highlight:
+  - The coverage verification results (which requirements are addressed, which are not)
+  - Design trade-offs made
+- **After user approval**, write the document.
+- **Maintain the document's `**Status**:` field and its row in the Design Documents Index** in the same operation: `Draft` while content is in progress; `Approved (YYYY-MM-DD)` only when the user explicitly approves the document as complete for its scope.
+
+### Modifying Existing Design Documents
+
+This skill can be used to revise design documents or propagate decision changes. When modifying existing content:
+
+1. **Read the document** before proposing any changes.
+2. **Check downstream effects** — identify tasks in `3-code/tasks.md` and decisions in `decisions/` that reference or depend on the content being changed. Report these to the user before proceeding.
+3. **Present the proposed changes** clearly (what will change, why, and which downstream artifacts are affected).
+4. **Wait for user confirmation** before applying changes.
+5. **Status downgrade**: if the document's `**Status**:` is `Approved`, warn that the modification reverts it to `Draft`, and apply the reversion in the same operation as the change.
+
+### Design Completeness Assessment
+
+This skill can assess the overall readiness of the design phase. When the user requests a completeness assessment, or before Design → Code transition:
+
+#### 1. Document Completeness
+
+For each document in the Design Documents Index: `Stub` means selected but not yet drafted; for `Draft` and `Approved` documents, assess whether they cover the scope implied by the architecture (e.g., if the architecture defines three components, does the interface design cover all three?). Also assess whether the selected set still fits the project — a requirement implying a design concern with no corresponding document is a gap — and whether any document has outgrown its high-level scope and should be split into sub-documents (see Document Granularity in `2-design/CLAUDE.design.md`).
+
+#### 2. Requirement Coverage
+
+Cross-reference **all** approved requirements against the full set of design documents — not just the current session's work. For each uncovered requirement, note which design document should address it.
+
+#### 3. Constraint Compliance
+
+Verify no design choice across any document violates a constraint.
+
+#### 4. Assumption Risk
+
+Identify assumptions the design depends on that are still unverified. A design built on an unverified assumption may need revision if the assumption proves false.
+
+#### 5. Decision Coverage
+
+Review design documents for significant technical choices that are not captured as `DEC-*` artifacts. Implicit decisions embedded in documents without a corresponding record weaken traceability and risk inconsistency.
+
+#### 6. Severity Classification
+
+| Severity | Criteria | Examples |
+|----------|----------|----------|
+| **Critical** | Blocks Design → Code transition or leaves a Must-have requirement unaddressed | Empty architecture document; Must-have requirement not covered by any design document; constraint violated by a design choice |
+| **Important** | Weakens design quality or traceability but does not block progress | Implicit decision not recorded as `DEC-*`; Should-have requirement not covered; design depends on unverified high risk assumption; design document incomplete for its scope |
+| **Minor** | Low-impact gaps that can be addressed during implementation | Missing Mermaid diagram; design depends on unverified low risk assumption; minor traceability link missing |
+
+Present findings grouped by severity (Critical first). For each finding, suggest a concrete action. Let the user decide which to address and in what order.
+
+#### 7. Next Step Guidance
+
+After the completeness assessment is finalized and there are **no Critical findings**, inform the user that the next step is **component identification** via `/SDLC-decompose`. This skill analyzes the design artifacts to identify distinct software components and creates per-component directories.
+
+For complex projects, suggest running the assessment iteratively — addressing findings, updating the design, and re-assessing — until results converge (i.e., no new Critical or Important findings emerge between successive runs).
+
+### Decision Triggers
+
+Decisions must be captured whenever the user shapes the design — not only when a technical pattern emerges. Follow the recording, deprecation, and supersession procedures in [`decisions/PROCEDURES.md`](../../../decisions/PROCEDURES.md).
+
+**When to create a new decision:**
+- A significant technical pattern emerges (error handling, data flow, security, naming conventions, etc.).
+- The user **approves a design choice** — the approval itself is the decision; record it immediately.
+- The user **expresses a preference** (e.g., "I'd rather use SQLite than PostgreSQL", "let's keep the API REST-only") — treat every stated preference as a decision to record.
+
+**When to modify an existing decision:**
+- The user **changes their mind** about a previously recorded decision — follow the deprecation or supersession procedure in `PROCEDURES.md`.
+- New information invalidates or narrows a prior decision — propose an update and wait for approval before modifying.
+
+**Rules:**
+- Do **not** silently embed decisions into design documents without recording them as `DEC-*` artifacts.
+- Do **not** wait until the end of the session — record or update decisions as soon as they are confirmed.
+- When in doubt about whether something qualifies as a decision, surface it to the user and ask.
+
+### Proactive Suggestions
+
+After completing a design action, suggest relevant follow-up work:
+
+- **After drafting the architecture**: suggest which selected documents the components imply working on first, potential decisions to record (technology choices, component boundaries), and constraints to verify against the proposed structure.
+- **After drafting any other design document**: suggest implications for the other documents in the index (e.g., data structures implying interface contracts), flag architecture assumptions it reveals, and cross-check against user stories for completeness.
+- **After modifying a design document**: flag decisions or other design documents that may be affected by the change.
+
+Present suggestions as options the user can accept, modify, or decline. Do not act on suggestions without explicit user confirmation.
+
+### Interaction Style
+
+- Ask one topic at a time — closely related design questions may be grouped together (e.g., "Which components need persistent storage, and what are their data access patterns?"), but avoid mixing unrelated topics in a single turn. Wait for the user's answer before moving to the next topic.
+- When the architecture involves trade-offs or multiple valid approaches, present the options with pros and cons and let the user choose.
+- After gathering enough information, propose the content and ask for confirmation before writing the file. **Multiple related design sections may be proposed together** in a single batch (e.g., two component descriptions at once, several API endpoints at once). Present each section clearly so the user can approve, modify, or decline them individually.
+- When the user confirms, write the document or section.
+- **After completing an approved action or after the user declines a proposal, briefly summarize what was done, then ask the user how they want to proceed.** Do not jump directly into the next design step.
+- When the user asks for suggestions or is unsure what to do next, use the Proactive Suggestions guidelines above and suggest the next design step based on the Design Documents Index and the current state of its documents.
+- Surface potential conflicts between requirements and design constraints immediately — do not resolve silently. When a design choice impacts multiple documents, note the cross-document implications.
+
+### Current State Tracking
+
+Whenever the skill applies user-approved changes (creating or updating design documents, recording decisions), update the `### Current State` subsection in `CLAUDE.md` following the Current State Protocol defined there:
+
+1. **Phase transition** — when the first user-approved design change is applied (transitioning from Specification to Design, advancement already confirmed by the user during Phase Validation): set `**Phase**: Design`, rewrite `**Summary**:` as a fresh Design-phase summary, and convert `**Gap analysis**:` to its passed form, recording how the gate was passed (protocol rule 3).
+2. **`**Design documents**:` line** — list which design documents have content and which are still empty or incomplete (e.g., `**Design documents**: architecture drafted; data model and API design pending`). Update it incrementally as documents are created or modified.
+3. **`**Completeness assessment**:` line** — when an assessment is run, (over)write the line in active form (see Assessment lines in the Current State Protocol), with today's date and the compact list of open findings (e.g., `**Completeness assessment**: 2026-03-10 — fresh — open: Important: storage choice not recorded as DEC; Minor: architecture diagram missing`, or `… — fresh — no issues` when the run found none). When an applied change directly corrects a listed finding, remove it from the list in the same operation; when the last one is removed, set the tail to `all issues resolved`. When design documents or decisions change beyond correcting listed findings, flip the marker to `stale (design changed since)` (protocol rule 2) and remind the user that a fresh assessment is needed before advancing to Code.
+
+### Rules
+
+- **Current State synchronization**: whenever design documents are created, updated, or decisions are recorded, update `### Current State` in `CLAUDE.md` as described in the Current State Tracking section above. This update must happen in the same operation as the design change.
+- Always reference requirements by ID (e.g., `REQ-F-search-by-name`) for traceability.
+- Use Mermaid diagrams where they add clarity.
+- If a requirement is ambiguous or contradictory, surface it — do not resolve silently.
