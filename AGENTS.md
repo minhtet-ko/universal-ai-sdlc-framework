@@ -4,7 +4,7 @@
 
 ## Memory Policy
 
-**Do not use Claude memory files to store project information**. All project knowledge — domain context, team structure, constraints, decisions, and any other relevant information — must be captured exclusively through the SDLC artifact system (stakeholders, constraints, assumptions, goals, requirements, decisions, etc.). This ensures all knowledge is structured, traceable, and available to every team member working on the project.
+**Do not use any agent's private memory to store project information** — no Claude memory files, Codex or Gemini memories, Cursor/Copilot personal rules, or similar tool-specific stores. Teammates drive different agents, and knowledge kept in one tool's memory is invisible to everyone else. All project knowledge — domain context, team structure, constraints, decisions, and any other relevant information — must be captured exclusively through the SDLC artifact system (stakeholders, constraints, assumptions, goals, requirements, decisions, etc.). This ensures all knowledge is structured, traceable, and available to every team member working on the project.
 
 ---
 
@@ -62,9 +62,41 @@ All changes to this repository are made by AI agents following these instruction
 
 ---
 
+## Multi-Agent Interoperability
+
+This framework is tool-neutral: the same instructions and skills drive Claude Code, Codex, Gemini CLI, and any other agent that can read files, edit files, and run commands. Team members may each use a different agent on the same project.
+
+- **Canonical sources**: this `AGENTS.md`, the phase files `AGENTS.<phase>.md`, the component files `3-code/<component-name>/AGENTS.md`, and the skills in `.agents/skills/`. Only these are edited.
+- **Generated adapters** — never edit them by hand: `CLAUDE.md` files (root and per component), `.claude/skills/`, and `.gemini/commands/`. They are produced by `.agents/bin/sync-adapters.sh`. Any change that adds, renames, or removes a skill or a component `AGENTS.md` must run that script in the same operation and include its output.
+- **Skill notation**: throughout the framework, `/SDLC-<name>` means "invoke the skill `SDLC-<name>`" in whatever way your tool supports:
+
+| Agent | How to invoke a skill (example: `SDLC-execute-task`) |
+|-------|-------------------------------------------------------|
+| Claude Code | `/SDLC-execute-task` |
+| Gemini CLI | `/SDLC-execute-task` (or let it activate the skill from `.agents/skills/`) |
+| Codex | `$SDLC-execute-task`, or ask it to use the skill by name |
+| Any other agent | "Read `.agents/skills/SDLC-execute-task/SKILL.md` and follow it exactly" |
+
+- **Component instructions**: before reading or changing files under `3-code/<component-name>/`, read that component's `AGENTS.md` — even if your tool does not load nested instruction files automatically. Its decisions index is binding.
+- **Tool-specific features are optional**: skills never depend on a particular tool's features (sub-agents, plan mode, memory, special question widgets). Where a skill says "ask the user", any interactive question is fine; an agent without a human in the loop stops instead of guessing (see the shared collaboration procedure, §7).
+
+---
+
+## Team Collaboration
+
+When more than one person works on the project, follow [`.agents/skills/shared/multi-agent-collaboration.md`](.agents/skills/shared/multi-agent-collaboration.md). In short:
+
+- Every run acts as an **actor** `<person> (<agent>)`, e.g. `alice (codex)`.
+- Tasks have an **`Owner`** in `3-code/tasks.md`; you only work on tasks you own, and tasks other people have `In Progress` are skipped, not treated as interrupted.
+- **Claim before you work**: sync, set `In Progress` and `Owner`, and publish the claim (push or draft pull request) before writing product code.
+- **One branch per task or fix**, merged through a reviewed pull request, ideally reviewed by a teammate using a different agent.
+- **Shared files are merged by rule**: index rows are a union, Current State is recomputed from the artifacts, and contradictions are always surfaced to the user.
+
+---
+
 ## Phase-Specific Instructions
 
-Each phase directory contains a `AGENTS.<phase>.md` file. When working in a phase:
+Each phase directory contains an `AGENTS.<phase>.md` file. When working in a phase:
 
 1. Read the phase-specific instructions — they extend (not override) this file
 2. Consult the decisions index in that phase file before starting work (for the Code phase, decisions indexes are in each component's own `AGENTS.md` file — `3-code/<component-name>/AGENTS.md` — not in `AGENTS.code.md`)
@@ -98,7 +130,7 @@ Before creating artifacts in the next phase, check these minimum preconditions. 
 | Spec → Design | Gap analysis fresh, no Critical gaps | `**Gap analysis**:` line in Current State: present in active form, `fresh`, no open Critical issues |
 | Design → Code | All design documents drafted | Every document in the Design Documents Index of `2-design/AGENTS.design.md` has `**Status**:` `Draft` or `Approved` — not `Stub` |
 | Design → Code | Completeness assessment fresh, no Critical findings | `**Completeness assessment**:` line in Current State: present in active form, `fresh`, no open Critical findings |
-| Design → Code | Components identified | Per-component directories (each with a `AGENTS.md`) in `3-code/` |
+| Design → Code | Components identified | Per-component directories (each with an `AGENTS.md`) in `3-code/` |
 
 **Crossing a gate always requires explicit user confirmation** — phase gate advancement is an "always ask" action (see Graduated Safeguards). When all preconditions are met, ask the user to confirm the advancement; when some are not, list them and proceed only if the user explicitly accepts the gaps. The crossing is recorded by updating `**Phase**:` in Current State: `/SDLC-design` sets `Design` when the first user-approved design change is applied; `/SDLC-decompose` sets `Code` when the component directories are created (which also satisfies the "components identified" precondition).
 

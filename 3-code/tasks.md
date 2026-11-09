@@ -5,7 +5,7 @@
 | Symbol | Status |
 |--------|--------|
 | `Todo` | Not started |
-| `In Progress` | Currently being worked on |
+| `In Progress` | Currently being worked on (an `Owner` is mandatory) |
 | `Blocked` | Waiting on a dependency or decision (reason **must** be noted in the Notes column) |
 | `Done` | Completed |
 | `Decomposed` | Split into subtasks (subtask IDs **must** be noted in the Notes column) |
@@ -25,19 +25,21 @@
 ## Task Table
 
 <!-- Req column: links to requirements this task implements (comma-separated), or "-" if none. -->
+<!-- Owner column: "-" when unclaimed, otherwise the actor "<person> (<agent>)" who claimed the task, e.g. "alice (codex)".
+     See .agents/skills/shared/multi-agent-collaboration.md. -->
 
 ### Setup & Infrastructure
 
-| ID | Task | Priority | Status | Req | Dependencies | Updated | Notes |
-|----|------|----------|--------|-----|--------------|---------|-------|
+| ID | Task | Priority | Status | Owner | Req | Dependencies | Updated | Notes |
+|----|------|----------|--------|-------|-----|--------------|---------|-------|
 
 <!-- Add one section per component (matching per-component directories in 3-code/). -->
 <!-- Example: ### Backend, ### Frontend, etc. -->
 
 ### Deploy & Operations
 
-| ID | Task | Priority | Status | Req | Dependencies | Updated | Notes |
-|----|------|----------|--------|-----|--------------|---------|-------|
+| ID | Task | Priority | Status | Owner | Req | Dependencies | Updated | Notes |
+|----|------|----------|--------|-------|-----|--------------|---------|-------|
 
 ---
 

@@ -16,6 +16,13 @@ This skill has two invocation modes, determined by whether the user provided con
 
 Determine the mode before doing anything else, and follow the corresponding Task Selection branch.
 
+### Actor and Team Sync
+
+This skill may run in parallel with teammates driving other agents. Before Task Selection, follow [`shared/multi-agent-collaboration.md`](../shared/multi-agent-collaboration.md):
+
+- **Determine your actor** `<person> (<agent>)` (§1). It is written to the `Owner` column when you claim a task and to the log's `**Agent:**` line.
+- **Sync with the integration branch** (§3, step 1) so that `tasks.md` reflects teammates' claims. If the sync is not possible (offline, uncommitted local changes that block it), tell the user and continue only with their confirmation.
+
 ### Task Descriptions Are Indicative, Not Prescriptive
 
 The `Task` column in `tasks.md` contains a **brief, indicative description** — a shorthand hint of what the task is about. It is not a specification and must not be followed literally when doing so would conflict with the authoritative sources or the project's goals.
@@ -57,7 +64,7 @@ Use this branch only when the skill was invoked with no additional user context 
 
 3. **Read the Execution Plan**: Look at the Execution Plan section to understand phase ordering. Phases are executed sequentially — complete all tasks in a phase before moving to the next.
 
-4. **Check for interrupted tasks**: Scan the Task Table for any task with status `In Progress`. If one is found, **stop** — that task was likely interrupted in a previous session. Inform the user which task is in progress and ask how they want to proceed (resume, reset to Todo, or cancel it) before continuing. Do not select a different task.
+4. **Check for interrupted tasks**: Scan the Task Table for tasks with status `In Progress` whose `Owner` is the current person (any agent). If one is found, **stop** — that task was likely interrupted in a previous session. Inform the user which task is in progress and ask how they want to proceed (resume, reset to Todo, or cancel it) before continuing. Do not select a different task. Tasks `In Progress` owned by **other people** are teammates' work in flight: skip them, and do not report them as interrupted. An `In Progress` task with no owner is an inconsistency — surface it to the user.
 
 5. **Find the current phase**: Identify the earliest phase that still has tasks with a status other than `Done`, `Cancelled`, or `Decomposed`. If no such phase exists:
    - If any tasks across all phases have status `Blocked`, **stop** and inform the user that the implementation plan is complete except for blocked tasks. List the blocked tasks and their blockers. Do not proceed.
@@ -68,7 +75,7 @@ Use this branch only when the skill was invoked with no additional user context 
    - Check the status of the tasks it depends on (from the `Dependencies` column).
    - If the blocking condition described in `Notes` no longer applies and all dependencies are `Done`, update its status to `Todo` and set `Updated` to today's date.
 
-7. **Find the next task**: Within the current phase, find the first task (in the listed order) that has status `Todo` in the Task Table.
+7. **Find the next task**: Within the current phase, find the first task (in the listed order) that has status `Todo` in the Task Table. If the current phase has no `Todo` task left because the remaining ones are `In Progress` with teammates, tell the user: they may wait, help a teammate (by agreement), or explicitly pick a task from a later phase whose dependencies are `Done`.
 
 8. **Validate dependencies**: Check that all tasks listed in the selected task's `Dependencies` column are marked as `Done`.
    - If any dependency is **not** `Done`, **stop** — inform the user that this task has unmet dependencies and should likely be marked as `Blocked`. List the unmet dependencies and ask the user how they want to proceed (mark it as Blocked, skip it, force-start it, execute one of the blocking tasks first, or revise the implementation plan). If the user chooses to mark the task as `Blocked`, record the blocking reason in the `Notes` column (e.g., "Blocked: waiting on TASK-xyz which is still Todo").
@@ -88,11 +95,11 @@ Use this branch only when the skill was invoked with user-provided context (see 
    - If exactly one task matches, select it.
    - If multiple tasks plausibly match, or no task matches, **stop** and ask the user to disambiguate. List the candidates (or the closest matches) with their IDs, phases, and descriptions. Do **not** fall back to the next task automatically — the user's intent must be honored.
 
-4. **Check for interrupted tasks**: If any task in the Task Table has status `In Progress` and it is **not** the one the user just selected, inform the user that another task is mid-flight and ask whether to continue with the user-selected task anyway, switch to finishing the in-progress task, or cancel. Proceed according to the user's answer.
+4. **Check for interrupted tasks**: If any task in the Task Table has status `In Progress`, is owned by the current person, and is **not** the one the user just selected, inform the user that another of their tasks is mid-flight and ask whether to continue with the user-selected task anyway, switch to finishing the in-progress task, or cancel. Proceed according to the user's answer.
 
 5. **Check the selected task's status**:
    - `Done`, `Cancelled`, or `Decomposed`: **stop** and inform the user — the task is not actionable. For `Done` or `Cancelled`, ask whether they want to reopen it (e.g., reset to `Todo`) or pick a different one; a `Decomposed` task is never reopened — work on its subtasks instead. If the user reopens a `Done` task, reverse any statuses propagated at its completion (Path A step 9): linked requirements with `Status: Implemented` revert to `Approved`, user stories that were `Implemented` only by virtue of those requirements revert to `Approved`, and goals previously marked `Achieved` on their basis are flagged to the user for re-evaluation. Update artifact files and index rows in the same operation.
-   - `In Progress`: treat this as resuming an interrupted task — proceed to Task Preparation.
+   - `In Progress`: if its `Owner` is the current person, treat this as resuming an interrupted task — proceed to Task Preparation. If it is owned by **another person**, **stop**: tell the user who owns it, and proceed only if the user confirms the owner agreed to hand it over (then record the handover per §2 of the collaboration procedure).
    - `Blocked`: read the `Notes` column and check the task's `Dependencies`. Surface the reason to the user and ask whether to force-start it, unblock (if the blocker is no longer valid — then set status to `Todo`), or pick a different task.
    - `Todo`: proceed to step 6.
 
@@ -183,11 +190,11 @@ Before entering the Execution section, do the following in order:
 
 2. **If the file does NOT exist:**
    - Copy `_template.md` to `<task-id>.md`.
-   - Fill the header metadata: task ID + link and today's date as `Started`. The header has no other mutable fields — task status lives in `tasks.md`, and the final outcome will be captured as a `[CONCLUSION]` entry appended at the end.
+   - Fill the header metadata: task ID + link, today's date as `Started`, and your actor as `Agent`. The header has no other mutable fields — task status lives in `tasks.md`, and the final outcome will be captured as a `[CONCLUSION]` entry appended at the end.
 
 3. **If the file DOES exist:**
    - The task's status in `tasks.md` **must** be `In Progress` — a pre-existing log implies a prior skill run on the same task (either interrupted, or concluded and now reopened). If the status is anything else (`Todo`, `Done`, `Cancelled`, `Decomposed`, `Blocked`), **stop** and surface the inconsistency to the user. Likely causes: a previous run crashed before updating status, the log file was created manually, the task was reset without cleaning up the log, or a stale log was left in place. Ask how to proceed (resume by setting the status to `In Progress`, archive/delete the log and restart from template, or investigate further). Do not proceed until the user resolves the inconsistency.
-   - If the status is `In Progress`, the log should have already been read in full during Task Preparation's Resume branch (including its `## Understanding` section and its `[Q&A]`, `[RECONSIDER]`, and `[CONCLUSION]` entries). Append a `[RESUMED]` entry to the `## Execution log` section noting today's date and a brief indication of what triggered the resumption, then continue. Do not modify the pre-existing header, Understanding, or any earlier entry.
+   - If the status is `In Progress`, the log should have already been read in full during Task Preparation's Resume branch (including its `## Understanding` section and its `[Q&A]`, `[RECONSIDER]`, and `[CONCLUSION]` entries). Append a `[RESUMED]` entry to the `## Execution log` section noting today's date and a brief indication of what triggered the resumption, then continue. If the previous run was made by a different actor, append a `[HANDOFF]` entry first (§6 of the collaboration procedure). Do not modify the pre-existing header, Understanding, or any earlier entry.
 
 4. **Populate the Understanding section** (only on the fresh branch — skip this step when resuming a pre-existing log): fill the `## Understanding` section of the log with the synthesized scope derived during Task Preparation. Include hyperlinks to every referenced artifact — linked requirements, relevant design documents, applicable decisions, and downstream tasks. If the synthesized scope diverges from the brief description in `tasks.md`, note the divergence explicitly. Once filled, this section is immutable for the lifetime of the task — if new understanding emerges later, record it as a `[RECONSIDER]` or `[NOTE]` entry in the Execution log instead.
 
@@ -199,7 +206,7 @@ Follow one of two paths based on complexity assessment. Throughout both paths, m
 
 #### Path A: Task is Manageable — Execute
 
-1. **Update status**: Set the task's Status to `In Progress` and update the `Updated` column with today's date in `tasks.md`.
+1. **Claim the task**: Set the task's Status to `In Progress`, its `Owner` to your actor, and the `Updated` column to today's date in `tasks.md`, then publish the claim as described in §3 of [`shared/multi-agent-collaboration.md`](../shared/multi-agent-collaboration.md) (claim commit or draft pull request, after the user confirms the push) and continue on the task's branch (§4). If the claim is lost to a teammate, stop and return to Task Selection. When resuming a task you already own, only update `Updated` (and the `(<agent>)` part of `Owner` if you now use a different agent).
 
 2. **Check for design gaps before coding**: If you anticipate a significant divergence from the design documents (not from the task description — see the distinction in "Task Descriptions Are Indicative"), **stop and follow the Design Gap procedure** (below) before writing implementation code.
 
@@ -246,7 +253,7 @@ Follow one of two paths based on complexity assessment. Throughout both paths, m
 
    **Coverage is health, not a gate**: flipping a requirement to `Implemented` does not require verification coverage. However, when flipping one, read its rows in the verification indexes (the component ones and the global `3-code/verification.md`) — if the requirement, or any of its acceptance criteria, has no coverage recorded, report the gap in the output. Do not block the status change on it.
 
-10. **Do NOT commit automatically** — leave changes for user review.
+10. **Do NOT commit automatically** — leave changes for user review. (The claim in step 1 is the only commit this skill makes on its own initiative, and only after the user confirms it.) Remind the user that the work is merged through a reviewed pull request (§4 of the collaboration procedure).
 
 #### Path B: Task is Too Large — Decompose
 
@@ -256,6 +263,7 @@ Follow one of two paths based on complexity assessment. Throughout both paths, m
    - **ID**: use the parent task ID with a descriptive suffix (e.g., `TASK-model-service-list`, `TASK-model-service-download`).
    - **Priority**: inherit from parent task.
    - **Status**: `Todo`.
+   - **Owner**: `-` (the parent keeps its owner as historical record).
    - **Req**: distribute the parent's requirement links to the relevant subtasks.
    - **Dependencies**: set correctly (subtasks may depend on each other or on the same dependencies as the parent).
    - **Updated**: today's date.

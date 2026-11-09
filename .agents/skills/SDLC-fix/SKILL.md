@@ -19,6 +19,10 @@ Before doing anything else, read the `**Phase**:` field of the `### Current Stat
 
 4. **`Code`** — this is the expected state. Proceed with Issue Elicitation.
 
+### Actor and Team Sync
+
+Follow [`shared/multi-agent-collaboration.md`](../shared/multi-agent-collaboration.md): determine your actor `<person> (<agent>)` (§1) and sync with the integration branch before gathering context. Fixes have no Task Table row to claim: do the work on a `fix/<FIX-ID>` branch and, once the fix ID is assigned, offer to announce it with a draft pull request so teammates do not fix the same issue in parallel (§3, §4). Before starting, check open pull requests and branches for a fix of the same issue; if one exists, surface it to the user.
+
 ### Issue Elicitation
 
 Gather enough context from the user to understand the problem and determine the scope of the fix. Ask the user the following, adapting the questions to what they have already provided:
@@ -133,7 +137,7 @@ Before entering the Execution section, do the following in order:
 
 2. **If the file does NOT exist (fresh fix):**
    - Copy `_fix_template.md` to `<FIX-ID>.md`.
-   - Fill the header metadata: fix ID and today's date as `Started`. The header has no other mutable fields — the final outcome will be captured as a `[CONCLUSION]` entry appended at the end.
+   - Fill the header metadata: fix ID, today's date as `Started`, and your actor as `Agent`. The header has no other mutable fields — the final outcome will be captured as a `[CONCLUSION]` entry appended at the end.
 
 3. **If the file DOES exist (resumption of a prior fix):**
    - The user must already have confirmed this is a resumption during the "Assigning the fix identifier" subsection of Issue Elicitation. If the file exists but the user indicated this is a distinct fix that happened to share a slug, the slug should already have been disambiguated — no pre-existing log file should be in play. If one still is, **stop** and surface the inconsistency to the user before proceeding.

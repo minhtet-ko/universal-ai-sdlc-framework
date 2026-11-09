@@ -78,13 +78,13 @@ If any component boundary is ambiguous (e.g., a module could be part of a larger
 
 #### 2. Create Component Directories
 
-For each approved component, create a directory and a `AGENTS.md` inside it:
+For each approved component, create a directory and an `AGENTS.md` inside it:
 
 ```
 3-code/<component-name>/AGENTS.md
 ```
 
-The file is named exactly `AGENTS.md` so that Claude Code auto-loads it whenever it accesses files inside the component directory — the component's instructions and decisions index are then in effect even when work happens outside a skill. Do not use component-specific names (e.g., `AGENTS.backend.md`): auto-loading and component discovery depend on the literal name.
+The file is named exactly `AGENTS.md` so that agents load it whenever they work inside the component directory — Codex, Gemini CLI (configured by `.gemini/settings.json`), and other `AGENTS.md`-aware tools read it natively, and Claude Code reads it through a generated `CLAUDE.md` shim (see below). The component's instructions and decisions index are then in effect even when work happens outside a skill. Do not use component-specific names (e.g., `AGENTS.backend.md`): auto-loading and component discovery depend on the literal name.
 
 The component's `AGENTS.md` file should contain:
 
@@ -125,6 +125,8 @@ Maps requirements and acceptance criteria to the automated tests of this compone
 
 The skeleton starts empty — rows are added during implementation (`/SDLC-execute-task`, `/SDLC-fix`) in the same operation as test changes.
 
+After creating all component directories, run `.agents/bin/sync-adapters.sh` to generate each component's `CLAUDE.md` shim (a one-line import of its `AGENTS.md`). Never write the shim by hand and never put content in it — the component's `AGENTS.md` is the only file to edit.
+
 Do **not** move or restructure existing files in `2-design/`. The shared design documents remain in their phase directory. Component directories in `3-code/` supplement them with component-specific focus.
 
 #### 3. Update 3-code/AGENTS.code.md
@@ -159,6 +161,6 @@ After creating the approved component directories, update the `### Current State
 
 - **Read-before-write**: always read existing files before proposing changes.
 - **Do not move existing files**: design documents remain at the `2-design/` top level.
-- **Only create skeleton directories**: the skill creates per-component directories, each with a `AGENTS.md` and an empty `verification.md`, in `3-code/`. Actual source code, build configuration, and test scaffolding are added during implementation.
+- **Only create skeleton directories**: the skill creates per-component directories, each with an `AGENTS.md` and an empty `verification.md`, in `3-code/`. Actual source code, build configuration, and test scaffolding are added during implementation.
 - **Preserve existing content**: when updating `AGENTS.code.md`, do not remove or modify content outside the sections this skill manages.
 - **User approval required**: present identified components and wait for explicit approval before writing any files.

@@ -175,13 +175,14 @@ After approval, write the approved plan into `3-code/tasks.md`:
 
 For each task, create a row:
 
-| ID | Task | Priority | Status | Req | Dependencies | Updated | Notes |
-|----|------|----------|--------|-----|--------------|---------|-------|
+| ID | Task | Priority | Status | Owner | Req | Dependencies | Updated | Notes |
+|----|------|----------|--------|-------|-----|--------------|---------|-------|
 
 - **ID**: `TASK-kebab-name` — descriptive, unique
 - **Task**: short description (imperative form)
 - **Priority**: derive from the goal priority (Must-have goal → P1, Should-have → P2, infrastructure/cross-cutting → P0 or P1 based on criticality)
 - **Status**: `Todo`
+- **Owner**: `-` (tasks are claimed at execution time — see [`shared/multi-agent-collaboration.md`](../shared/multi-agent-collaboration.md))
 - **Req**: link(s) to requirement file(s) this task implements, or `-` for infrastructure tasks. Example: `[REQ-F-search-by-name](../1-spec/requirements/REQ-F-search-by-name.md)`
 - **Dependencies**: `TASK-*` IDs this task depends on, or `-`
 - **Updated**: today's date (YYYY-MM-DD)
@@ -207,7 +208,8 @@ For each task, create a row:
 
 - Keep every task row with status `Done`, `Cancelled`, or `Decomposed` unchanged in its section; never rename pre-existing task IDs.
 - Replace only pending rows (`Todo`, `Blocked`) that the new plan supersedes.
-- If any task is `In Progress`, stop and ask the user how to handle it (complete it first, adopt it into the new plan, or cancel it) before writing.
+- If any task is `In Progress`, stop and ask the user how to handle it (complete it first, adopt it into the new plan, or cancel it) before writing. Tasks `In Progress` owned by other people belong to teammates working in parallel: never cancel or rewrite them without the owner's agreement, keep their `Owner` unchanged, and re-plan only after syncing with the integration branch so in-flight claims are visible.
+- Keep the `Owner` of every preserved row unchanged.
 - In the Execution Plan, keep fully completed phases unchanged and rewrite only current and future phases. Where the new plan relies on work already done, reference the existing `Done` tasks instead of creating duplicates.
 
 #### 3. Update Current State

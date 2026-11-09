@@ -19,7 +19,7 @@ You are generating a comprehensive status report for the entire SDLC project.
 4. Read `3-code/tasks.md` (if it exists and has content), and the verification indexes that exist — `3-code/verification.md` and `3-code/<component>/verification.md`.
 5. Scan all artifact indexes in the phase files — follow File column links only when needed to resolve ambiguous statuses.
 6. List files in `decisions/` to count decisions (exclude `PROCEDURES.md`, templates, and `.history.md` files; read `.history.md` only when the corresponding active record shows Deprecated or Superseded status).
-7. List component directories in `3-code/` (directories containing a `AGENTS.md` file).
+7. List component directories in `3-code/` (directories containing an `AGENTS.md` file).
 8. List files in `4-deploy/infrastructure/`, `4-deploy/scripts/`, `4-deploy/runbooks/` to count deployment artifacts (exclude templates and placeholder `README.md` files).
 
 ### Phase Validation
@@ -91,7 +91,7 @@ Report each document's `**Status**:` field verbatim (including the approval date
 
 #### Phase 3: Code
 
-**Components**: list identified components (from `3-code/` directories with a `AGENTS.md` file), showing name and technology. If no components → state "Not decomposed yet".
+**Components**: list identified components (from `3-code/` directories with an `AGENTS.md` file), showing name and technology. If no components → state "Not decomposed yet".
 
 **Task Summary** (if `tasks.md` exists and has tasks):
 
@@ -109,6 +109,8 @@ Report each document's `**Status**:` field verbatim (including the approval date
 - Current phase: the earliest phase with incomplete tasks (not all Done/Cancelled/Decomposed)
 - Phase progress: for each phase, show `Done/Total` count and phase name
 - Overall: `N/M tasks done (X%)`
+
+**Work in Flight** (if any task is `In Progress`): list each such task with its `Owner` (`<person> (<agent>)`) and `Updated` date, so the team sees who is working on what. Flag `In Progress` tasks without an owner, and tasks whose `Updated` date is more than 7 days old (possibly abandoned claims to discuss with their owner).
 
 **Requirements Coverage**: N of M approved requirements have at least one linked task (scan Req column in task table). List any approved requirements without tasks.
 

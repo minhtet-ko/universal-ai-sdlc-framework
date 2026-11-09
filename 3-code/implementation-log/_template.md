@@ -12,6 +12,7 @@ new entries are appended to the Execution log.
 
 - **Task:** [<TASK-ID>](../tasks.md)
 - **Started:** <YYYY-MM-DD>
+- **Agent:** <person> (<agent>)
 
 ---
 
@@ -56,6 +57,7 @@ Each entry starts with a date, a tag in square brackets, and a short title. Use 
 - `[TENSION]` — a tension between authoritative sources was surfaced to the user. Record the resolution.
 - `[TEST]` — a test-run outcome worth capturing (failures, debug iterations, final green run).
 - `[RESUMED]` — the skill resumed work on a pre-existing `In Progress` task.
+- `[HANDOFF]` — the actor changed (another person after an agreed handover, or the same person with a different AI agent). Name the previous and the new actor.
 - `[NOTE]` — any other important observation or evaluation made during execution.
 - `[CONCLUSION]` — appended as the last entry when the skill finishes (Done, Decomposed, Blocked, or Cancelled). The body must state the final status and summarize: files created/modified, tests added/updated, requirements/acceptance criteria satisfied, new or updated decisions, design-document updates, and any pre-existing issues observed. A log may contain multiple `[CONCLUSION]` entries over time — if a task is reopened after a prior `[CONCLUSION]`, a new `[RESUMED]` entry is appended and, when the task is concluded again, another `[CONCLUSION]` is appended at the end.
 
